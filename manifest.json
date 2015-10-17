@@ -1,14 +1,15 @@
 {
-    "name": "YunoHost example app",
-    "id": "ynhexample",
+    "name": "Galette",
+    "id": "galette",
     "description": {
-        "en": "Example package for Yunohost applications."
+        "en": "Membership management web application for non profit organizations",
+        "fr": "Outil de gestion d'adhérents et de cotisation en ligne pour associations"
     },
     "licence": "free",
     "maintainer": {
-        "name": "John doe",
-        "email": "john.doe@example.com",
-        "url": "http://example.com"
+        "name": "Alex Aubin",
+        "email": "alex.aubin@mailoo.org",
+        "url": "https://github.com/alexAubin/"
     },
     "multi_instance": "false",
     "arguments": {
@@ -16,17 +17,17 @@
             {
                 "name": "domain",
                 "ask": {
-                    "en": "Choose a domain for ynhexample"
+                    "en": "Choose a domain for galette"
                 },
                 "example": "example.com"
             },
             {
                 "name": "path",
                 "ask": {
-                    "en": "Choose a path for ynhexample"
+                    "en": "Choose a path for galette"
                 },
-                "example": "/example",
-                "default": "/example"
+                "example": "/galette",
+                "default": "/galette"
             },
             {
                 "name": "admin",
