@@ -45,7 +45,7 @@ final_path=/var/www/$app
 
 # Get and move sources
 
-tar xjvf sources/galette-$version.tar.bz2
+tar xjvf ../sources/galette-$version.tar.bz2
 mv galette-$version/galette $final_path
 rm -r galette-$version
 
