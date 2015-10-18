@@ -53,7 +53,7 @@ rm -r galette-$version
 
 sudo chown -R root:www-data $final_path
 sudo chmod -R o-rwx $final_path
-for folder in cache config exports logs photos templates_c tempimages
+for folder in attachments cache exports files imports logs photos templates_c tempimages
 do
     sudo chmod u+rx  $final_path/data/$folder
     sudo chmod g+rwx $final_path/data/$folder
