@@ -73,12 +73,16 @@ db_pwd=$(dd if=/dev/urandom bs=1 count=200 2> /dev/null | tr -c -d '[A-Za-z0-9]'
 sudo yunohost app initdb $db_user -p $db_pwd
 sudo yunohost app setting $app mysqlpassword -v $db_pwd
 
-# Edit config file
+# Install mechanize to have a browser in a python script
 
-sed -i "s/USER_DB_VALUE/$db_user/g" ../conf/config.inc.php
-sed -i "s/PWD_DB_VALUE/$db_pwd/g"   ../conf/config.inc.php
-sed -i "s/NAME_DB_VALUE/$db_user/g" ../conf/config.inc.php
-sudo cp ../conf/config.inc.php $final_path/config/
+sudo pip install mechanize
+
+# Then call python script to fill galette php installer with the right info
+
+# todo : replace last password by user-specified pass
+sudo python ../conf/initialConf.py $domain$path $db_pwd $admin $db_pwd
+
+rm -rf $final_path/install
 
 ####################################################
 #   Nginx configuration                            #
