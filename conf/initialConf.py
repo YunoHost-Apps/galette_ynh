@@ -1,5 +1,6 @@
 #!/usr/bin/python
 import re 
+import sys
 from mechanize import Browser
 
 path = sys.argv[1]
