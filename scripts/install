@@ -80,9 +80,9 @@ sudo pip install mechanize
 # Then call python script to fill galette php installer with the right info
 
 # todo : replace last password by user-specified pass
-sudo python ../conf/initialConf.py $domain$path $db_pwd $admin $db_pwd
+sudo python initialConf.py $domain$path $db_pwd $admin $db_pwd
 
-rm -rf $final_path/install
+sudo rm -rf $final_path/install
 
 ####################################################
 #   Nginx configuration                            #

@@ -3,9 +3,9 @@ import re
 import sys
 from mechanize import Browser
 
-path = sys.argv[1]
-password = sys.argv[2]
-admin = sys.argv[3]
+path      = sys.argv[1]
+password  = sys.argv[2]
+admin     = sys.argv[3]
 adminPass = sys.argv[4]
 
 br = Browser()
