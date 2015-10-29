@@ -1,11 +1,8 @@
-# YunoHost example app #
+Galette for Yunohost
+====================
 
-## Usage ##
-- Add application source files into `sources` subfolder.
-- Edit `conf/nginx.conf` file to match application prerequisites.
-- Edit manifest with application specific information.
-- Edit the install, upgrade, remove, backup, restore scripts.
-- Add a LICENSE file for the package.
+Galette is a membership management web application towards non profit organizations. [Official website](http://galette.eu/)
 
-**More information on the documentation page:**    
-https://yunohost.org/packaging_apps
+This package provides a quick and easy way to install galette (i.e. automatic MySQL base creation and configuration).
+Note that the Yunohost users won't be recognized in Galette.
+

@@ -2,8 +2,8 @@
 
 app=galette
 db_user=galette
-db_name=galett
-e
+db_name=galette
+
 root_pwd=$(sudo cat /etc/yunohost/mysql)
 domain=$(sudo yunohost app setting galette domain)
 
