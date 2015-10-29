@@ -45,7 +45,7 @@ final_path=/var/www/$app
 
 # Get and move sources
 
-tar xjvf ../sources/galette-$version.tar.bz2
+tar xjvf ../sources/galette-$version.tar.bz2 > /dev/null
 sudo mv galette-$version/galette $final_path
 rm -r galette-$version
 
@@ -112,6 +112,6 @@ sudo pip install mechanize
 sudo python initialConf.py $domain$path $db_pwd $admin $db_pwd
 
 # Delete the install folder as advised by galette php installer
-sudo rm -rf $final_path/install
+#sudo rm -rf $final_path/install
 
 
