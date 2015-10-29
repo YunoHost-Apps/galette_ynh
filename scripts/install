@@ -10,7 +10,8 @@ version=0.8.2
 domain=$1
 path=$2
 admin=$3
-is_public=$4
+adminPass=$4
+is_public=$5
 
 ####################################################
 #   Check domain / path availability               #
@@ -105,15 +106,12 @@ sudo yunohost app ssowatconf
 ####################################################
 
 # Install mechanize to have a browser in a python script
-
 sudo pip install mechanize
 
 # Then call python script to fill galette php installer with the right info
-
-# todo : replace last password by user-specified pass
-sudo python initialConf.py $domain$path $db_pwd $admin $db_pwd
+sudo python initialConf.py $domain$path $db_pwd $admin $adminPass
 
 # Delete the install folder as advised by galette php installer
-#sudo rm -rf $final_path/install
+sudo rm -rf $final_path/install
 
 

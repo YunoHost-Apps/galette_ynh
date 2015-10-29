@@ -32,9 +32,17 @@
             {
                 "name": "admin",
                 "ask": {
-                    "en": "Choose an admin user"
+                    "en": "Admin login"
                 },
-                "example": "johndoe"
+                "example": "galette_admin",
+                "default": "galette_admin"
+            },
+            {
+                "name": "adminPass",
+                "ask": {
+                    "en": "Admin password"
+                },
+                "example": ""
             },
             {
                 "name": "is_public",
