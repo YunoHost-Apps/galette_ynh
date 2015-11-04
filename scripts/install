@@ -112,6 +112,6 @@ sudo pip install mechanize
 sudo python initialConf.py $domain$path $db_pwd $admin $adminPass
 
 # Delete the install folder as advised by galette php installer
-sudo rm -rf $final_path/install
+# sudo rm -rf $final_path/install
 
 
