@@ -1,117 +1,159 @@
 #!/bin/bash
 
-####################################################
-#   Retrieve arguments / set global variables      #
-####################################################
+#=================================================
+# GENERIC START
+#=================================================
+# IMPORT GENERIC HELPERS
+#=================================================
 
-app=galette
-version=0.8.2
+source _common.sh
+source /usr/share/yunohost/helpers
 
-domain=$1
-path=$2
-admin=$3
-adminPass=$4
-is_public=$5
+#=================================================
+# MANAGE SCRIPT FAILURE
+#=================================================
 
-####################################################
-#   Check domain / path availability               #
-####################################################
+# Exit if an error occurs during the execution of the script
+ynh_abort_if_errors
 
-sudo yunohost app checkurl $domain$path -a $app
+#=================================================
+# RETRIEVE ARGUMENTS FROM THE MANIFEST
+#=================================================
 
-if [[ ! $? -eq 0 ]]; then
-    echo "Error : domain/path url isnt available"
-    exit 1
-fi
+app=$YNH_APP_INSTANCE_NAME
 
-####################################################
-#   Check that admin user is an existing account   #
-####################################################
+domain=$YNH_APP_ARG_DOMAIN
+path=$YNH_APP_ARG_PATH
+admin=$YNH_APP_ARG_ADMIN
+password=$YNH_APP_ARG_PASSWORD
+is_public=$YNH_APP_ARG_IS_PUBLIC
 
-sudo yunohost user list --json | grep -q "\"username\": \"$admin\""
-if [[ ! $? -eq 0 ]]; then
-    echo "Error : the chosen admin user does not exist"
-    exit 1
-fi
-
-sudo yunohost app setting $app admin -v $admin
-
-sudo yunohost app setting $app is_public -v "$is_public"
-
-####################################################
-#   Copy / install source files                    #
-####################################################
+#=================================================
+# CHECK IF THE APP CAN BE INSTALLED WITH THESE ARGS
+#=================================================
 
 final_path=/var/www/$app
+test ! -e "$final_path" || ynh_die "This path already contains a folder"
 
-# Get and move sources
+# Normalize the url path syntax
+path_url=$(ynh_normalize_url_path "$path_url")
 
-tar xjvf ../sources/galette-$version.tar.bz2 > /dev/null
-sudo mv galette-$version/galette $final_path
-rm -r galette-$version
+# Check web path availability
+ynh_webpath_available "$domain" "$path_url"
+# Register (book) web path
+ynh_webpath_register "$app" "$domain" "$path_url"
+
+#=================================================
+# STORE SETTINGS FROM MANIFEST
+#=================================================
+
+ynh_app_setting_set "$app" domain "$domain"
+ynh_app_setting_set "$app" path   "$path_url"
+ynh_app_setting_set "$app" admin  "$admin"
+ynh_app_setting_set "$app" is_public "$is_public"
+
+#=================================================
+# CREATE A MYSQL DATABASE
+#=================================================
+# If your app uses a MySQL database, you can use these lines to bootstrap
+# a database, an associated user and save the password in app settings
+
+db_name=$(ynh_sanitize_dbid "$app")
+db_pwd=$(ynh_string_random 15)
+ynh_app_setting_set "$app" db_name "$db_name"
+ynh_mysql_setup_db "$db_name" "$db_name" "$db_pwd"
+
+#=================================================
+# DOWNLOAD, CHECK AND UNPACK SOURCE
+#=================================================
+
+ynh_app_setting_set "$app" final_path "$final_path"
+# Download, check integrity, uncompress and patch the source from app.src
+ynh_setup_source "$final_path"
+
+#=================================================
+# NGINX CONFIGURATION
+#=================================================
+
+# Create a dedicated nginx config
+ynh_add_nginx_config
+
+#=================================================
+# CREATE DEDICATED USER
+#=================================================
+
+# Create a system user
+ynh_system_user_create "$app"
+
+
+#=================================================
+# PHP-FPM CONFIGURATION
+#=================================================
+
+# Create a dedicated php-fpm config
+ynh_add_fpm_config
+
+#=================================================
+# SPECIFIC SETUP
+#=================================================
+# MODIFY A CONFIG FILE
+#=================================================
+
+configpath="$final_path"/config/
+cp ../config.inc.php "$configpath"
+ynh_replace_string "__NAME_DB__" "$db_name" "$configpath"
+ynh_replace_string "__PWD_DB__"  "$db_pwd"  "$configpath"
+ynh_replace_string "__USER_DB__" "$db_name" "$configpath"
+
+#=================================================
+# STORE THE CHECKSUM OF THE CONFIG FILE
+#=================================================
+
+# Calculate and store the config file checksum into the app settings
+ynh_store_file_checksum "$final_path/CONFIG_FILE"
+
+#=================================================
+# GENERIC FINALIZATION
+#=================================================
+# SECURE FILES AND DIRECTORIES
+#=================================================
 
 # Set permissions
 
-sudo chown -R root:www-data $final_path
-sudo chmod -R o-rwx $final_path
-sudo chmod u+rx  $final_path/config
-sudo chmod g+rwx $final_path/config
+chown -R root:www-data $final_path
+chmod -R o-rwx $final_path
+chmod u+rx  $final_path/config
+chmod g+rwx $final_path/config
 for folder in attachments cache exports files imports logs photos templates_c tempimages
 do
-    sudo chmod u+rx  $final_path/data/$folder
-    sudo chmod g+rwx $final_path/data/$folder
+    chmod u+rx  $final_path/data/$folder
+    chmod g+rwx $final_path/data/$folder
 done
 
-####################################################
-#   Create a mysql database                        #
-####################################################
+#=================================================
+# SETUP LOGROTATE
+#=================================================
 
-# Generate random password
+# Use logrotate to manage application logfile(s)
+ynh_use_logrotate
 
-db_user=galette
-db_pwd=$(dd if=/dev/urandom bs=1 count=200 2> /dev/null | tr -c -d '[A-Za-z0-9]' | sed -n 's/\(.\{24\}\).*/\1/p')
+#=================================================
+# SETUP SSOWAT
+#=================================================
 
-# Initialize database and store mysql password for upgrade
-
-sudo yunohost app initdb $db_user -p $db_pwd
-sudo yunohost app setting $app mysqlpassword -v $db_pwd
-
-####################################################
-#   Nginx configuration                            #
-####################################################
-
-sed -i "s@YNH_WWW_PATH@$path@g"         ../conf/nginx.conf
-sed -i "s@YNH_WWW_ALIAS@$final_path/@g" ../conf/nginx.conf
-sudo cp ../conf/nginx.conf /etc/nginx/conf.d/$domain.d/$app.conf
-
-####################################################
-#   SSOWat configuration                           #
-####################################################
-
-if [ "$is_public" = "Yes" ];
+if [ $is_public -eq 0 ]
+then	# Remove the public access
+	ynh_app_setting_delete "$app" skipped_uris
+fi
+# Make app public if necessary
+if [ $is_public -eq 1 ]
 then
-  # unprotected_uris allows SSO credentials to be passed anyway.
-  sudo yunohost app setting $app unprotected_uris -v "/"
+	# unprotected_uris allows SSO credentials to be passed anyway.
+	ynh_app_setting_set "$app" unprotected_uris "/"
 fi
 
-####################################################
-#   Restart services                               #
-####################################################
+#=================================================
+# RELOAD NGINX
+#=================================================
 
-sudo service nginx reload
-sudo yunohost app ssowatconf
-
-####################################################
-#   Call galette php installer and fill the form   #
-####################################################
-
-# Install mechanize to have a browser in a python script
-sudo pip install mechanize
-
-# Then call python script to fill galette php installer with the right info
-sudo python initialConf.py $domain$path $db_pwd $admin $adminPass
-
-# Delete the install folder as advised by galette php installer
-# sudo rm -rf $final_path/install
-
-
+systemctl reload nginx

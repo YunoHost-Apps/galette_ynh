@@ -1,0 +1,4 @@
+SOURCE_URL=http://download.tuxfamily.org/galette/archives/galette-0.8.2.3.tar.bz2
+SOURCE_SUM=2fb6185cf502a2e0d0e879d1d0e3e19150acd845a385dd5b39f1a0814935015b
+SOURCE_SUM_PRG=sha256sum
+SOURCE_FORMAT=tar.bz2

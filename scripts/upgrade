@@ -6,4 +6,6 @@
 # If you really need to upgrade, please check the official documentation :
 # http://galette.eu/documentation/fr/installation/update.html
 #
-#
+
+# adminPass --> password
+# mysqlpassword --> mysqlpwd
