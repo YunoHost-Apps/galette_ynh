@@ -7,9 +7,8 @@
     },
     "licence": "free",
     "maintainer": {
-        "name": "Alex Aubin",
-        "email": "alex.aubin@mailoo.org",
-        "url": "https://github.com/alexAubin/"
+        "name": "Jean-Baptiste Holcroft",
+        "email": "jean-baptiste@holcroft.fr"
     },
     "multi_instance": "false",
     "arguments": {
