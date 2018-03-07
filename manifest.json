@@ -1,18 +1,29 @@
 {
     "name": "Galette",
     "id": "galette",
+    "packaging_format": 1,
+    "url": "https://www.galette.eu",
+    "license": "GPL-3.0-or-later",
+    "version": "0.8.2.3-1",
+    "requirements": {
+        "yunohost": ">= 2.7.9"
+    },
+    "services": [
+        "nginx",
+        "php5-fpm",
+        "mysql"
+    ],
     "description": {
         "en": "Membership management web application for non profit organizations",
         "fr": "Outil de gestion d'adhérents et de cotisation en ligne pour associations"
     },
-    "licence": "free",
     "maintainer": {
         "name": "Jean-Baptiste Holcroft",
         "email": "jean-baptiste@holcroft.fr"
     },
-    "multi_instance": "false",
+    "multi_instance": false,
     "arguments": {
-        "install" : [
+        "install": [
             {
                 "name": "domain",
                 "type": "domain",
