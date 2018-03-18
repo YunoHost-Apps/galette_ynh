@@ -115,6 +115,13 @@ ynh_replace_string "__USER_DB__" "$db_name" "$configpath"
 ynh_store_file_checksum "$configpath"
 
 #=================================================
+# CREATE DATABASE
+#=================================================
+
+script_for_db="$final_path"/install/scripts/mysql.sql
+ynh_mysql_execute_file_as_root "$script_for_db" "$db_name"
+
+#=================================================
 # GENERIC FINALIZATION
 #=================================================
 # SECURE FILES AND DIRECTORIES
@@ -122,14 +129,10 @@ ynh_store_file_checksum "$configpath"
 
 # TODO: improve permissions
 
-chown -R root:www-data "$final_path"
-chmod -R o-rwx "$final_path"
-chmod u+rx  "$final_path/config"
-chmod g+rwx "$final_path/config"
 for folder in attachments cache exports files imports logs photos templates_c tempimages
 do
-    chmod u+rx  "$final_path/data/$folder"
-    chmod g+rwx "$final_path/data/$folder"
+    chown "$app"  "$final_path/data/$folder"
+    chmod 750     "$final_path/data/$folder"
 done
 
 #=================================================
@@ -143,12 +146,21 @@ ynh_use_logrotate
 # SETUP SSOWAT
 #=================================================
 
-if [ $is_public -eq 0 ]
+if [[ "$path_url" == "/" ]]
+then
+	# ynh panel is only comptable with non-root installation
+	ynh_replace_string "  include conf.d/" "  #include conf.d/" "$finalnginxconf"
+else
+	ynh_replace_string "^#sub_path_only"   ""                   "$finalnginxconf"
+fi
+ynh_store_file_checksum "$finalnginxconf"
+
+if [ "$is_public" -eq 0 ]
 then	# Remove the public access
 	ynh_app_setting_delete "$app" skipped_uris
 fi
 # Make app public if necessary
-if [ $is_public -eq 1 ]
+if [ "$is_public" -eq 1 ]
 then
 	# unprotected_uris allows SSO credentials to be passed anyway.
 	ynh_app_setting_set "$app" unprotected_uris "/"

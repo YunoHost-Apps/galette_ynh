@@ -44,7 +44,7 @@ ynh_mysql_remove_db "$db_user" "$db_name"
 #=================================================
 
 # Remove the app directory securely
-# ynh_secure_remove "$final_path"
+ynh_secure_remove "$final_path"
 
 #=================================================
 # REMOVE NGINX CONFIGURATION
