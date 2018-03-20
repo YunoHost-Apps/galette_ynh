@@ -21,7 +21,7 @@
         "name": "Jean-Baptiste Holcroft",
         "email": "jean-baptiste@holcroft.fr"
     },
-    "multi_instance": false,
+    "multi_instance": true,
     "arguments": {
         "install": [
             {
