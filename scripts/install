@@ -24,8 +24,6 @@ app=$YNH_APP_INSTANCE_NAME
 
 domain=$YNH_APP_ARG_DOMAIN
 path_url=$YNH_APP_ARG_PATH
-admin=$YNH_APP_ARG_ADMIN
-password=$YNH_APP_ARG_PASSWORD
 is_public=$YNH_APP_ARG_IS_PUBLIC
 
 #=================================================
@@ -49,7 +47,6 @@ ynh_webpath_register "$app" "$domain" "$path_url"
 
 ynh_app_setting_set "$app" domain "$domain"
 ynh_app_setting_set "$app" path   "$path_url"
-ynh_app_setting_set "$app" admin  "$admin"
 ynh_app_setting_set "$app" is_public "$is_public"
 
 #=================================================
@@ -96,38 +93,13 @@ ynh_system_user_create "$app"
 ynh_add_fpm_config
 
 #=================================================
-# SPECIFIC SETUP
-#=================================================
-# MODIFY A CONFIG FILE
-#=================================================
-
-configpath="$final_path"/config/config.inc.php
-cp ../conf/config.inc.php "$configpath"
-ynh_replace_string "__NAME_DB__" "$db_name" "$configpath"
-ynh_replace_string "__PWD_DB__"  "$db_pwd"  "$configpath"
-ynh_replace_string "__USER_DB__" "$db_name" "$configpath"
-
-#=================================================
-# STORE THE CHECKSUM OF THE CONFIG FILE
-#=================================================
-
-# Calculate and store the config file checksum into the app settings
-ynh_store_file_checksum "$configpath"
-
-#=================================================
-# CREATE DATABASE
-#=================================================
-
-script_for_db="$final_path"/install/scripts/mysql.sql
-ynh_mysql_execute_file_as_root "$script_for_db" "$db_name"
-
-#=================================================
 # GENERIC FINALIZATION
 #=================================================
 # SECURE FILES AND DIRECTORIES
 #=================================================
 
-# TODO: improve permissions
+chown "$app"  "$final_path/config"
+chmod 750     "$final_path/config"
 
 for folder in attachments cache exports files imports logs photos templates_c tempimages
 do
@@ -171,3 +143,28 @@ fi
 #=================================================
 
 systemctl reload nginx
+
+#=================================================
+# SEND A README FOR THE ADMIN
+#=================================================
+
+message="Galette need you to finish the installation manually.
+
+Please open "https://$domain$path_url"
+
+Database information you'll need:
+Type: mysql
+Host: localhost
+Port: 3306
+User: "$db_name"
+Password: "$db_pwd"
+Name: "$db_name"
+
+Important: after the installation, you _should_ run:
+
+\`chmod -R 500 "$final_path/config"\`
+\`rm -rf "$final_path/install"\`
+
+If you facing an issue or want to improve this app, please open a new issue in this project: https://github.com/YunoHost-Apps/galette_ynh"
+
+ynh_send_readme_to_admin "$message"

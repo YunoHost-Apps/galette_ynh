@@ -42,22 +42,6 @@
                 "default": "/galette"
             },
             {
-                "name": "admin",
-                "type": "user",
-                "ask": {
-                    "en": "Admin login"
-                },
-                "example": "jibec"
-            },
-            {
-                "name": "password",
-                "type": "password",
-                "ask": {
-                    "en": "Admin password"
-                },
-                "example": ""
-            },
-            {
                 "name": "is_public",
                 "ask": {
                     "en": "Is it a public application ?"

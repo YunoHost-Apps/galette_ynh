@@ -24,12 +24,10 @@ app=$YNH_APP_INSTANCE_NAME
 
 domain=$(ynh_app_setting_get "$app" domain)
 path_url=$(ynh_app_setting_get "$app" path)
-admin=$(ynh_app_setting_get "$app" admin)
 is_public=$(ynh_app_setting_get "$app" is_public)
 final_path=$(ynh_app_setting_get "$app" final_path)
 db_name=$(ynh_app_setting_get "$app" db_name)
 db_pwd=$(ynh_app_setting_get "$app" mysqlpwd)
-password=$(ynh_app_setting_get "$app" password)
 
 #=================================================
 # ENSURE DOWNWARD COMPATIBILITY
@@ -43,8 +41,6 @@ elif [ "$is_public" = "No" ]; then
 	ynh_app_setting_set "$app" is_public 0
 	is_public=0
 fi
-
-# mysqlpassword --> mysqlpwd
 
 # If db_name doesn't exist, create it
 if [ -z "$db_name" ]; then
@@ -113,22 +109,6 @@ ynh_add_fpm_config
 #=================================================
 # SPECIFIC UPGRADE
 #=================================================
-# ...
-#=================================================
-
-configpath="$final_path"/config/config.inc.php
-cp ../conf/config.inc.php "$configpath"
-
-ynh_replace_string "__NAME_DB__" "$db_name" "$configpath"
-ynh_replace_string "__PWD_DB__"  "$db_pwd"  "$configpath"
-ynh_replace_string "__USER_DB__" "$db_name" "$configpath"
-
-# Verify the checksum and backup the file if it's different
-ynh_backup_if_checksum_is_different "$configpath"
-# Recalculate and store the config file checksum into the app settings
-ynh_store_file_checksum "$configpath"
-
-#=================================================
 # SETUP LOGROTATE
 #=================================================
 
@@ -144,6 +124,10 @@ ynh_use_logrotate --non-append
 # TODO: improve permissions
 
 chown -R root:root "$final_path"
+
+chown "$app"  "$final_path/config"
+chmod 750     "$final_path/config"
+
 for folder in attachments cache exports files imports logs photos templates_c tempimages
 do
     chown "$app"  "$final_path/data/$folder"
@@ -179,3 +163,14 @@ fi
 #=================================================
 
 systemctl reload nginx
+
+message="Galette need you to finish the update manually.
+
+Please open "$domain/$path_url" and finish the upgrade process.
+
+\`chmod -R 500 "$final_path/config"\`
+\`rm -rf "$final_path/install"\`
+
+If you facing an issue or want to improve this app, please open a new issue in this project: https://github.com/YunoHost-Apps/galette_ynh"
+
+ynh_send_readme_to_admin "$message"
