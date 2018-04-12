@@ -84,6 +84,9 @@ path_url=$(ynh_normalize_url_path "$path_url")
 
 # Download, check integrity, uncompress and patch the source from app.src
 ynh_setup_source "$final_path"
+mv --force "$final_path"/galette/* "$final_path"/
+ynh_secure_remove "$final_path"/tests
+chown -R root:root "$final_path"
 
 #=================================================
 # NGINX CONFIGURATION
@@ -155,7 +158,7 @@ fi
 if [ $is_public -eq 1 ]
 then
 	# unprotected_uris allows SSO credentials to be passed anyway
-	ynh_app_setting_set "$app" unprotected_uris "/"
+	ynh_app_setting_set "$app" skipped_uris "/"
 fi
 
 #=================================================
@@ -167,6 +170,14 @@ systemctl reload nginx
 message="Galette need you to finish the update manually.
 
 Please open "$domain/$path_url" and finish the upgrade process.
+
+You may need database information:
+Type: mysql
+Host: localhost
+Port: 3306
+User: "$db_name"
+Password: "$db_pwd"
+Name: "$db_name"
 
 \`chmod -R 500 "$final_path/config"\`
 \`rm -rf "$final_path/install"\`
