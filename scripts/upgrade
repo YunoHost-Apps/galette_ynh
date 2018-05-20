@@ -179,8 +179,8 @@ User: "$db_name"
 Password: "$db_pwd"
 Name: "$db_name"
 
-\`chmod -R 500 "$final_path/config"\`
-\`rm -rf "$final_path/install"\`
+\`sudo chmod -R 500 "$final_path/config"\`
+\`sudo rm -rf "$final_path/install"\`
 
 If you facing an issue or want to improve this app, please open a new issue in this project: https://github.com/YunoHost-Apps/galette_ynh"
 
