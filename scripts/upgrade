@@ -6,4 +6,188 @@
 # If you really need to upgrade, please check the official documentation :
 # http://galette.eu/documentation/fr/installation/update.html
 #
-#
+
+#=================================================
+# GENERIC START
+#=================================================
+# IMPORT GENERIC HELPERS
+#=================================================
+
+source _common.sh
+source /usr/share/yunohost/helpers
+
+#=================================================
+# LOAD SETTINGS
+#=================================================
+
+app=$YNH_APP_INSTANCE_NAME
+
+domain=$(ynh_app_setting_get "$app" domain)
+path_url=$(ynh_app_setting_get "$app" path)
+is_public=$(ynh_app_setting_get "$app" is_public)
+final_path=$(ynh_app_setting_get "$app" final_path)
+db_name=$(ynh_app_setting_get "$app" db_name)
+db_pwd=$(ynh_app_setting_get "$app" mysqlpwd)
+
+#=================================================
+# ENSURE DOWNWARD COMPATIBILITY
+#=================================================
+
+# Fix is_public as a boolean value
+if [ "$is_public" = "Yes" ]; then
+	ynh_app_setting_set "$app" is_public 1
+	is_public=1
+elif [ "$is_public" = "No" ]; then
+	ynh_app_setting_set "$app" is_public 0
+	is_public=0
+fi
+
+# If db_name doesn't exist, create it
+if [ -z "$db_name" ]; then
+	db_name=$(ynh_sanitize_dbid "$app")
+	ynh_app_setting_set "$app" db_name "$db_name"
+fi
+
+# If db_name doesn't exist, create it
+if [ -z "$db_pwd" ]; then
+	db_pwd=$(ynh_app_setting_get "$app" mysqlpassword)
+	ynh_app_setting_set "$app" mysqlpwd "$db_pwd"
+fi
+
+# If final_path doesn't exist, create it
+if [ -z "$final_path" ]; then
+	final_path="/var/www/$app"
+	ynh_app_setting_set "$app" final_path "$final_path"
+fi
+
+
+
+#=================================================
+# BACKUP BEFORE UPGRADE THEN ACTIVE TRAP
+#=================================================
+
+# Exit if an error occurs during the execution of the script
+ynh_abort_if_errors
+
+#=================================================
+# CHECK THE PATH
+#=================================================
+
+# Normalize the URL path syntax
+path_url=$(ynh_normalize_url_path "$path_url")
+
+#=================================================
+# STANDARD UPGRADE STEPS
+#=================================================
+# DOWNLOAD, CHECK AND UNPACK SOURCE
+#=================================================
+
+# Download, check integrity, uncompress and patch the source from app.src
+mv "$final_path" "$final_path.old"
+
+ynh_setup_source "$final_path"
+mv "$final_path"/galette/* "$final_path"/
+ynh_secure_remove "$final_path"/tests
+
+cp "$final_path.old/config/config.inc.php" "$final_path/config/config.inc.php"
+
+# delete temp directory
+ynh_secure_remove "$final_path.old"
+
+#=================================================
+# NGINX CONFIGURATION
+#=================================================
+
+# Create a dedicated nginx config
+ynh_add_nginx_config
+
+#=================================================
+# CREATE DEDICATED USER
+#=================================================
+
+# Create a system user
+ynh_system_user_create "$app"
+
+#=================================================
+# PHP-FPM CONFIGURATION
+#=================================================
+
+# Create a dedicated php-fpm config
+ynh_add_fpm_config
+
+#=================================================
+# SPECIFIC UPGRADE
+#=================================================
+# SETUP LOGROTATE
+#=================================================
+
+# Use logrotate to manage app-specific logfile(s)
+ynh_use_logrotate --non-append
+
+#=================================================
+# GENERIC FINALIZATION
+#=================================================
+# SECURE FILES AND DIRECTORIES
+#=================================================
+
+# TODO: improve permissions
+
+chown -R root:root "$final_path"
+
+chown "$app"  "$final_path/config"
+chmod 750     "$final_path/config"
+
+for folder in attachments cache exports files imports logs photos templates_c tempimages
+do
+    chown "$app"  "$final_path/data/$folder"
+    chmod 750     "$final_path/data/$folder"
+done
+
+#=================================================
+# SETUP SSOWAT
+#=================================================
+
+if [[ "$path_url" == "/" ]]
+then
+	# ynh panel is only comptable with non-root installation
+	ynh_replace_string "  include conf.d/" "  #include conf.d/" "$finalnginxconf"
+else
+	ynh_replace_string "^#sub_path_only"   ""                   "$finalnginxconf"
+fi
+ynh_store_file_checksum "$finalnginxconf"
+
+if [ $is_public -eq 0 ]
+then	# Remove the public access
+	ynh_app_setting_delete "$app" skipped_uris
+fi
+# Make app public if necessary
+if [ $is_public -eq 1 ]
+then
+	# unprotected_uris allows SSO credentials to be passed anyway
+	ynh_app_setting_set "$app" skipped_uris "/"
+fi
+
+#=================================================
+# RELOAD NGINX
+#=================================================
+
+systemctl reload nginx
+
+message="Galette need you to finish the update manually.
+
+Please open "$domain/$path_url" and finish the upgrade process.
+
+You may need database information:
+Type: mysql
+Host: localhost
+Port: 3306
+User: "$db_name"
+Password: "$db_pwd"
+Name: "$db_name"
+
+\`sudo chmod -R 500 "$final_path/config"\`
+\`sudo rm -rf "$final_path/install"\`
+
+If you facing an issue or want to improve this app, please open a new issue in this project: https://github.com/YunoHost-Apps/galette_ynh"
+
+ynh_send_readme_to_admin "$message"
