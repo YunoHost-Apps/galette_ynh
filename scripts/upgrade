@@ -83,10 +83,16 @@ path_url=$(ynh_normalize_url_path "$path_url")
 #=================================================
 
 # Download, check integrity, uncompress and patch the source from app.src
+mv "$final_path" "$final_path.old"
+
 ynh_setup_source "$final_path"
-mv --force "$final_path"/galette/* "$final_path"/
+mv "$final_path"/galette/* "$final_path"/
 ynh_secure_remove "$final_path"/tests
-chown -R root:root "$final_path"
+
+cp "$final_path.old/config/config.inc.php" "$final_path/config/config.inc.php"
+
+# delete temp directory
+ynh_secure_remove "$final_path.old"
 
 #=================================================
 # NGINX CONFIGURATION
