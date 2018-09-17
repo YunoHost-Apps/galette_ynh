@@ -16,6 +16,7 @@
 		setup_private=1
 		setup_public=1
 		upgrade=1
+		upgrade=1		from_commit=cc5164cdadf9aec0eebb25d4252d849aa0054606
 		backup_restore=1
 		multi_instance=1
 		incorrect_path=1
@@ -37,3 +38,7 @@
 ;;; Options
 Email=jean-baptiste@holcroft.fr
 Notification=all
+;;; Upgrade options
+	; commit=cc5164cdadf9aec0eebb25d4252d849aa0054606
+		name=Upgrade from 0.9
+manifest_arg=domain=DOMAIN&path=PATH&admin=USER&is_public=1
