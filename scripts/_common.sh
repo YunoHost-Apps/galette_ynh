@@ -6,7 +6,7 @@
 
 # dependencies used by the app
 php_version="7.1"
-php_packages="php7.1-tidy php7.1-intl php7.1-mbstring php7.1-mysql php7.1-xml php7.1-gd"
+php_packages="php7.1-tidy php7.1-intl php7.1-mbstring php7.1-mysql php7.1-xml php7.1-gd php7.1-curl"
 
 #=================================================
 # EXPERIMENTAL HELPERS
