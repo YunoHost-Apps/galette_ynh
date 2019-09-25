@@ -50,6 +50,12 @@ ynh_app_setting_set "$app" path   "$path_url"
 ynh_app_setting_set "$app" is_public "$is_public"
 
 #=================================================
+# INSTALL DEPENDENCIES
+#=================================================
+
+ynh_install_php --phpversion="$php_version" --package="$php_packages"
+
+#=================================================
 # CREATE A MYSQL DATABASE
 #=================================================
 # If your app uses a MySQL database, you can use these lines to bootstrap
@@ -90,7 +96,7 @@ ynh_system_user_create "$app"
 #=================================================
 
 # Create a dedicated php-fpm config
-ynh_add_fpm_config
+ynh_add_fpm_config --phpversion="$php_version"
 
 #=================================================
 # GENERIC FINALIZATION

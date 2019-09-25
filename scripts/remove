@@ -29,8 +29,7 @@ final_path=$(ynh_app_setting_get "$app" final_path)
 # REMOVE DEPENDENCIES
 #=================================================
 
-# Remove metapackage and its dependencies
-# ynh_remove_app_dependencies
+ynh_remove_php
 
 #=================================================
 # REMOVE THE MYSQL DATABASE

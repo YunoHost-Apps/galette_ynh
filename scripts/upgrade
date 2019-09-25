@@ -105,6 +105,12 @@ ynh_secure_remove "$final_path.old"
 ynh_add_nginx_config
 
 #=================================================
+# INSTALL DEPENDENCIES
+#=================================================
+
+ynh_install_php --phpversion="$php_version" --package="$php_packages"
+
+#=================================================
 # CREATE DEDICATED USER
 #=================================================
 
@@ -116,7 +122,7 @@ ynh_system_user_create "$app"
 #=================================================
 
 # Create a dedicated php-fpm config
-ynh_add_fpm_config
+ynh_add_fpm_config --phpversion="$php_version"
 
 #=================================================
 # SPECIFIC UPGRADE
