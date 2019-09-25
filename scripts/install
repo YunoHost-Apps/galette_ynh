@@ -150,7 +150,7 @@ systemctl reload nginx
 
 message="Galette need you to finish the installation manually.
 
-Please open "https://$domain$path_url"
+Please open "$domain/$path_url" and finish the install process.
 
 Database information you'll need:
 Type: mysql
@@ -160,10 +160,9 @@ User: "$db_name"
 Password: "$db_pwd"
 Name: "$db_name"
 
-Important: after the installation, you _should_ run:
-
+Important! Once done, please remember to run as root or with sudo:
 \`chmod -R 500 "$final_path/config"\`
-\`rm -rf "$final_path/install"\`
+\`rm -fr "$final_path/install"\`
 
 If you facing an issue or want to improve this app, please open a new issue in this project: https://github.com/YunoHost-Apps/galette_ynh"
 

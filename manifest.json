@@ -4,9 +4,9 @@
     "packaging_format": 1,
     "url": "https://www.galette.eu",
     "license": "GPL-3.0-or-later",
-    "version": "0.9.1.2~ynh1",
+    "version": "0.9.1.2~ynh2",
     "requirements": {
-        "yunohost": ">= 2.7.9"
+        "yunohost": ">= 3.6"
     },
     "services": [
         "nginx",
@@ -44,7 +44,10 @@
             {
                 "name": "is_public",
                 "ask": {
-                    "en": "Is it a public application ?"
+                    "en": "Is it a public application?"
+                },
+                "help": {
+                    "en": "If no, only connected YunoHost users will be able to interact with the app"
                 },
                 "type": "boolean",
                 "default": "0"
