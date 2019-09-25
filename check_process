@@ -17,6 +17,7 @@
 		setup_public=1
 		upgrade=1
 		upgrade=1		from_commit=cc5164cdadf9aec0eebb25d4252d849aa0054606
+		upgrade=1		from_commit=65cd8b542310e8b349107ed222fdc57e3c2d239a
 		backup_restore=1
 		multi_instance=1
 		incorrect_path=1
@@ -41,4 +42,7 @@ Notification=all
 ;;; Upgrade options
 	; commit=cc5164cdadf9aec0eebb25d4252d849aa0054606
 		name=Upgrade from 0.9
+manifest_arg=domain=DOMAIN&path=PATH&admin=USER&is_public=1
+	; commit=65cd8b542310e8b349107ed222fdc57e3c2d239a
+		name=Upgrade from 0.9.1.2
 manifest_arg=domain=DOMAIN&path=PATH&admin=USER&is_public=1
