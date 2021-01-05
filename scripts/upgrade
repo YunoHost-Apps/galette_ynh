@@ -19,19 +19,28 @@ source /usr/share/yunohost/helpers
 #=================================================
 # LOAD SETTINGS
 #=================================================
+ynh_script_progression --message="Loading installation settings..."  --weight=1
 
 app=$YNH_APP_INSTANCE_NAME
 
-domain=$(ynh_app_setting_get "$app" domain)
-path_url=$(ynh_app_setting_get "$app" path)
-is_public=$(ynh_app_setting_get "$app" is_public)
-final_path=$(ynh_app_setting_get "$app" final_path)
-db_name=$(ynh_app_setting_get "$app" db_name)
-db_pwd=$(ynh_app_setting_get "$app" mysqlpwd)
+domain=$(ynh_app_setting_get --app=$app --key=domain)
+path_url=$(ynh_app_setting_get --app=$app --key=path)
+is_public=$(ynh_app_setting_get --app=$app --key=is_public)
+final_path=$(ynh_app_setting_get --app=$app --key=final_path)
+db_name=$(ynh_app_setting_get --app=$app --key=db_name)
+db_pwd=$(ynh_app_setting_get --app=$app --key=mysqlpwd)
+phpversion=$(ynh_app_setting_get --app=$app --key=phpversion)
+
+#=================================================
+# CHECK VERSION
+#=================================================
+
+upgrade_type=$(ynh_check_app_version_changed)
 
 #=================================================
 # ENSURE DOWNWARD COMPATIBILITY
 #=================================================
+ynh_script_progression --message="Ensuring downward compatibility..."  --weight=2
 
 # Fix is_public as a boolean value
 if [ "$is_public" = "Yes" ]; then
@@ -60,21 +69,19 @@ if [ -z "$final_path" ]; then
 	ynh_app_setting_set "$app" final_path "$final_path"
 fi
 
-
-
 #=================================================
 # BACKUP BEFORE UPGRADE THEN ACTIVE TRAP
 #=================================================
+ynh_script_progression --message="Backing up $app before upgrading (may take a while)..." --weight=7
 
+# Backup the current version of the app
+ynh_backup_before_upgrade
+ynh_clean_setup () {
+	# restore it if the upgrade fails
+	ynh_restore_upgradebackup
+}
 # Exit if an error occurs during the execution of the script
 ynh_abort_if_errors
-
-#=================================================
-# CHECK THE PATH
-#=================================================
-
-# Normalize the URL path syntax
-path_url=$(ynh_normalize_url_path "$path_url")
 
 #=================================================
 # STANDARD UPGRADE STEPS
@@ -100,29 +107,26 @@ ynh_secure_remove "$final_path.old"
 #=================================================
 # NGINX CONFIGURATION
 #=================================================
+ynh_script_progression --message="Upgrading NGINX web server configuration..." --weight=2
 
-# Create a dedicated nginx config
+# Create a dedicated NGINX config
 ynh_add_nginx_config
-
-#=================================================
-# INSTALL DEPENDENCIES
-#=================================================
-
-ynh_install_php --phpversion="$php_version" --package="$php_packages"
-
-#=================================================
-# CREATE DEDICATED USER
-#=================================================
-
-# Create a system user
-ynh_system_user_create "$app"
 
 #=================================================
 # PHP-FPM CONFIGURATION
 #=================================================
+ynh_script_progression --message="Upgrading PHP-FPM configuration..." --weight=2
 
-# Create a dedicated php-fpm config
-ynh_add_fpm_config --phpversion="$php_version"
+# Create a dedicated PHP-FPM config
+ynh_add_fpm_config --package="$extra_php_dependencies"
+
+#=================================================
+# CREATE DEDICATED USER
+#=================================================
+ynh_script_progression --message="Making sure dedicated system user exists..." --weight=1
+
+# Create a dedicated user (if not existing)
+ynh_system_user_create --username=$app
 
 #=================================================
 # SPECIFIC UPGRADE
@@ -141,15 +145,15 @@ ynh_use_logrotate --non-append
 
 # TODO: improve permissions
 
-chown -R root:root "$final_path"
+chown -R root: "$final_path"
 
-chown "$app"  "$final_path/config"
-chmod 750     "$final_path/config"
+chown "$app" "$final_path/config"
+chmod 750 "$final_path/config"
 
 for folder in attachments cache exports files imports logs photos templates_c tempimages
 do
-    chown "$app"  "$final_path/data/$folder"
-    chmod 750     "$final_path/data/$folder"
+    chown "$app" "$final_path/data/$folder"
+    chmod 750 "$final_path/data/$folder"
 done
 
 #=================================================
@@ -177,10 +181,17 @@ then
 fi
 
 #=================================================
+# GENERIC FINALIZATION
+#=================================================
 # RELOAD NGINX
 #=================================================
+ynh_script_progression --message="Reloading NGINX web server..." --weight=2
 
-systemctl reload nginx
+ynh_systemd_action --service_name=nginx --action=reload
+
+#=================================================
+# SEND A README FOR THE ADMIN
+#=================================================
 
 message="Galette need you to finish the update manually.
 
@@ -201,3 +212,10 @@ Important! Once done, please remember to run as root or with sudo:
 If you facing an issue or want to improve this app, please open a new issue in this project: https://github.com/YunoHost-Apps/galette_ynh"
 
 ynh_send_readme_to_admin "$message"
+
+#=================================================
+# END OF SCRIPT
+#=================================================
+
+ynh_script_progression --message="Upgrade of $app completed" --last
+
