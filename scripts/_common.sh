@@ -5,8 +5,8 @@
 #=================================================
 
 # dependencies used by the app
-php_version="7.3"
-php_packages="php7.3-tidy php7.3-intl php7.3-mbstring php7.3-mysql php7.3-xml php7.3-gd php7.3-curl"
+YNH_PHP_VERSION="7.3"
+php_packages="php${YNH_PHP_VERSION}-tidy php${YNH_PHP_VERSION}-intl php${YNH_PHP_VERSION}-mbstring php${YNH_PHP_VERSION}-mysql php${YNH_PHP_VERSION}-xml php${YNH_PHP_VERSION}-gd php${YNH_PHP_VERSION}-curl"
 
 #=================================================
 # EXPERIMENTAL HELPERS
