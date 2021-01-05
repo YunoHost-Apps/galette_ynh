@@ -2,33 +2,34 @@
     "name": "Galette",
     "id": "galette",
     "packaging_format": 1,
+        "description": {
+        "en": "Membership management web application for non profit organizations",
+        "fr": "Outil de gestion d'adhérents et de cotisation en ligne pour associations"
+    },
+    "version": "0.9.4.2~ynh1",
     "url": "https://www.galette.eu",
     "license": "GPL-3.0-or-later",
-    "version": "0.9.4.2~ynh1",
+    "maintainer": {
+        "name": "",
+        "email": ""
+    },
     "requirements": {
         "yunohost": ">= 3.8.1"
     },
+    "multi_instance": true,
     "services": [
         "nginx",
         "php7.3-fpm",
         "mysql"
     ],
-    "description": {
-        "en": "Membership management web application for non profit organizations",
-        "fr": "Outil de gestion d'adhérents et de cotisation en ligne pour associations"
-    },
-    "maintainer": {
-        "name": "Jean-Baptiste Holcroft",
-        "email": "jean-baptiste@holcroft.fr"
-    },
-    "multi_instance": true,
     "arguments": {
         "install": [
             {
                 "name": "domain",
                 "type": "domain",
                 "ask": {
-                    "en": "Choose a domain for galette"
+                    "en": "Choose a domain for Galette",
+                    "fr": "Choisissez un nom de domaine pour Galette"
                 },
                 "example": "example.com"
             },
@@ -36,21 +37,20 @@
                 "name": "path",
                 "type": "path",
                 "ask": {
-                    "en": "Choose a path for galette"
+                    "en": "Choose a path for Galette",
+                    "fr": "Choisissez un chemin pour Galette"
                 },
                 "example": "/galette",
                 "default": "/galette"
             },
             {
                 "name": "is_public",
-                "ask": {
-                    "en": "Is it a public application?"
-                },
-                "help": {
-                    "en": "If no, only connected YunoHost users will be able to interact with the app"
-                },
                 "type": "boolean",
-                "default": "0"
+                "ask": {
+                    "en": "Is it a public application?",
+                    "fr": "Est-ce une application publique ?"
+                },
+                "default": true
             }
         ]
     }
