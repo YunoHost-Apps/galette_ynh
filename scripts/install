@@ -67,7 +67,7 @@ ynh_setup_source --dest_dir="$final_path"
 
 mv "$final_path"/galette/* "$final_path"/
 ynh_secure_remove "$final_path"/tests
-chown -R root:root "$final_path"
+chown -R root: "$final_path"
 
 #=================================================
 # NGINX CONFIGURATION
@@ -95,6 +95,17 @@ ynh_add_fpm_config --package="$extra_php_dependencies"
 phpversion=$(ynh_app_setting_get --app=$app --key=phpversion)
 
 #=================================================
+# CONFIGURE GALETTE
+#=================================================
+ynh_script_progression --message="Configuring Galette..." --weight=1
+
+cp ../conf/config.inc.php.dist "$final_path/config/config.inc.php"
+
+# Change variables in Castopod configuration
+ynh_replace_string --match_string="__DBNAME__" --replace_string="$db_name" --target_file="$final_path/config/config.inc.php"
+ynh_replace_string --match_string="__DBPASSWORD__" --replace_string="$db_pwd" --target_file="$final_path/config/config.inc.php"
+
+#=================================================
 # GENERIC FINALIZATION
 #=================================================
 # SECURE FILES AND DIRECTORIES
@@ -120,24 +131,35 @@ ynh_use_logrotate
 # SETUP SSOWAT
 #=================================================
 
-if [[ "$path_url" == "/" ]]
-then
-	# ynh panel is only comptable with non-root installation
-	ynh_replace_string "  include conf.d/" "  #include conf.d/" "$finalnginxconf"
-else
-	ynh_replace_string "^#sub_path_only"   ""                   "$finalnginxconf"
-fi
-ynh_store_file_checksum "$finalnginxconf"
+# if [[ "$path_url" == "/" ]]
+# then
+# 	# ynh panel is only comptable with non-root installation
+# 	ynh_replace_string "  include conf.d/" "  #include conf.d/" "$finalnginxconf"
+# else
+# 	ynh_replace_string "^#sub_path_only"   ""                   "$finalnginxconf"
+# fi
+# ynh_store_file_checksum "$finalnginxconf"
 
-if [ "$is_public" -eq 0 ]
-then	# Remove the public access
-	ynh_app_setting_delete "$app" skipped_uris
-fi
-# Make app public if necessary
-if [ "$is_public" -eq 1 ]
+# if [ "$is_public" -eq 0 ]
+# then	# Remove the public access
+# 	ynh_app_setting_delete "$app" skipped_uris
+# fi
+# # Make app public if necessary
+# if [ "$is_public" -eq 1 ]
+# then
+# 	# unprotected_uris allows SSO credentials to be passed anyway.
+# 	ynh_app_setting_set "$app" skipped_uris "/"
+# fi
+
+#=================================================
+# SETUP SSOWAT
+#=================================================
+ynh_script_progression --message="Configuring SSOwat..." --weight=1
+
+# Make app public if necessary or protect it
+if [ $is_public -eq 1 ]
 then
-	# unprotected_uris allows SSO credentials to be passed anyway.
-	ynh_app_setting_set "$app" skipped_uris "/"
+	ynh_permission_update --permission "main" --add "visitors"
 fi
 
 #=================================================
