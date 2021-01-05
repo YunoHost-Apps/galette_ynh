@@ -6,7 +6,7 @@
     "license": "GPL-3.0-or-later",
     "version": "0.9.4.2~ynh1",
     "requirements": {
-        "yunohost": ">= 3.8"
+        "yunohost": ">= 3.8.1"
     },
     "services": [
         "nginx",
