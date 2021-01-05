@@ -10,7 +10,7 @@
     },
     "services": [
         "nginx",
-        "php7-fpm",
+        "php7.3-fpm",
         "mysql"
     ],
     "description": {
