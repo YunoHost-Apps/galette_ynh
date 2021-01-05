@@ -109,5 +109,5 @@ ynh_restore_file "/etc/logrotate.d/$app"
 # RELOAD NGINX AND PHP-FPM
 #=================================================
 
-systemctl reload php7.1-fpm
+systemctl reload php$phpversion-fpm
 systemctl reload nginx
