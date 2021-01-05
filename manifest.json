@@ -4,13 +4,13 @@
     "packaging_format": 1,
     "url": "https://www.galette.eu",
     "license": "GPL-3.0-or-later",
-    "version": "0.9.2.1~ynh1",
+    "version": "0.9.4.2~ynh1",
     "requirements": {
         "yunohost": ">= 3.6"
     },
     "services": [
         "nginx",
-        "php5-fpm",
+        "php7-fpm",
         "mysql"
     ],
     "description": {
