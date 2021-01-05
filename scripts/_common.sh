@@ -5,8 +5,8 @@
 #=================================================
 
 # dependencies used by the app
-php_version="7.1"
-php_packages="php7.1-tidy php7.1-intl php7.1-mbstring php7.1-mysql php7.1-xml php7.1-gd php7.1-curl"
+php_version="7.3"
+php_packages="php7.3-tidy php7.3-intl php7.3-mbstring php7.3-mysql php7.3-xml php7.3-gd php7.3-curl"
 
 #=================================================
 # EXPERIMENTAL HELPERS
@@ -79,9 +79,9 @@ ynh_install_php () {
 	# Store php_version into the config of this app
 	ynh_app_setting_set $app php_version $phpversion
 
-	if [ "$phpversion" == "7.0" ]
+	if [ "$phpversion" == "7.3" ]
 	then
-		ynh_die "Do not use ynh_install_php to install php7.0"
+		ynh_die "Do not use ynh_install_php to install php7.3"
 	fi
 
 	# Store the ID of this app and the version of php requested for it
@@ -96,7 +96,7 @@ ynh_install_php () {
 	ynh_add_app_dependencies --package="php$phpversion php${phpversion}-common $package"
 
 	# Set php7.0 back as the default version for php-cli.
-	update-alternatives --set php /usr/bin/php7.0
+	update-alternatives --set php /usr/bin/php7.3
 
 	# Remove this extra repository after packages are installed
 	ynh_remove_extra_repo --name=extra_php_version
@@ -109,11 +109,11 @@ ynh_remove_php () {
 	# Get the version of php used by this app
 	local phpversion=$(ynh_app_setting_get $app php_version)
 
-	if [ "$phpversion" == "7.0" ] || [ -z "$phpversion" ]
+	if [ "$phpversion" == "7.3" ] || [ -z "$phpversion" ]
 	then
-		if [ "$phpversion" == "7.0" ]
+		if [ "$phpversion" == "7.3" ]
 		then
-			ynh_print_err "Do not use ynh_remove_php to install php7.0"
+			ynh_print_err "Do not use ynh_remove_php to install php7.3"
 		fi
 		return 0
 	fi
