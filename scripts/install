@@ -131,36 +131,36 @@ ynh_use_logrotate
 # SETUP SSOWAT
 #=================================================
 
-# if [[ "$path_url" == "/" ]]
-# then
-# 	# ynh panel is only comptable with non-root installation
-# 	ynh_replace_string "  include conf.d/" "  #include conf.d/" "$finalnginxconf"
-# else
-# 	ynh_replace_string "^#sub_path_only"   ""                   "$finalnginxconf"
-# fi
-# ynh_store_file_checksum "$finalnginxconf"
+if [[ "$path_url" == "/" ]]
+then
+	# ynh panel is only comptable with non-root installation
+	ynh_replace_string "  include conf.d/" "  #include conf.d/" "$finalnginxconf"
+else
+	ynh_replace_string "^#sub_path_only"   ""                   "$finalnginxconf"
+fi
+ynh_store_file_checksum "$finalnginxconf"
 
-# if [ "$is_public" -eq 0 ]
-# then	# Remove the public access
-# 	ynh_app_setting_delete "$app" skipped_uris
-# fi
-# # Make app public if necessary
-# if [ "$is_public" -eq 1 ]
-# then
-# 	# unprotected_uris allows SSO credentials to be passed anyway.
-# 	ynh_app_setting_set "$app" skipped_uris "/"
-# fi
+if [ "$is_public" -eq 0 ]
+then	# Remove the public access
+	ynh_app_setting_delete "$app" skipped_uris
+fi
+# Make app public if necessary
+if [ "$is_public" -eq 1 ]
+then
+	# unprotected_uris allows SSO credentials to be passed anyway.
+	ynh_app_setting_set "$app" skipped_uris "/"
+fi
 
 #=================================================
 # SETUP SSOWAT
 #=================================================
-ynh_script_progression --message="Configuring SSOwat..." --weight=1
+# ynh_script_progression --message="Configuring SSOwat..." --weight=1
 
-# Make app public if necessary or protect it
-if [ $is_public -eq 1 ]
-then
-	ynh_permission_update --permission "main" --add "visitors"
-fi
+# # Make app public if necessary or protect it
+# if [ $is_public -eq 1 ]
+# then
+# 	ynh_permission_update --permission "main" --add "visitors"
+# fi
 
 #=================================================
 # RELOAD NGINX
