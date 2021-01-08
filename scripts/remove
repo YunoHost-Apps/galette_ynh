@@ -65,11 +65,9 @@ ynh_remove_logrotate
 #=================================================
 # SPECIFIC REMOVE
 #=================================================
-# REMOVE THE CRON FILE
-#=================================================
 
 # Remove the log files
-ynh_secure_remove "/var/log/$app/"
+ynh_secure_remove "/var/log/$app"
 
 #=================================================
 # GENERIC FINALIZATION
