@@ -175,7 +175,7 @@ ynh_systemd_action --service_name=nginx --action=reload
 
 message="Galette need you to finish the installation manually.
 
-Please open "$domain/$path_url" and finish the install process.
+Please open "http://$domain$path_url" and finish the install process.
 
 Database information you'll need:
 Type: mysql
