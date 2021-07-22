@@ -168,12 +168,12 @@ message="Galette need you to finish the installation manually.
 Please open "https://$domain/$path_url/installer.php" and finish the install process.
 
 Database information you'll need:
-Type: pgsql
-Host: localhost
-Port: 5432
-User: "$db_name"
-Password: "$db_pwd"
-Name: "$db_name"
+Type:		pgsql
+Host:		localhost
+Port:		5432
+User:		"$db_name"
+Password:	"$db_pwd"
+Name:		"$db_name"
 
 Important! Once done, please remember to run as root or with sudo:
 \`chmod -R 500 "$final_path/galette/config"\`
