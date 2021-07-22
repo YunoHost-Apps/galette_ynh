@@ -94,12 +94,12 @@ then
 	mv "$final_path" "$final_path.old"
 
 	ynh_setup_source "$final_path"
-	mv "$final_path"/galette/* "$final_path"/
-	ynh_secure_remove "$final_path"/tests
+	#ynh_secure_remove "$final_path"/tests
 
 	# when running automatic tests, there is no config.inc.php
-	if [ -e "$final_path.old/config/config.inc.php" ]; then
-	    cp "$final_path.old/config/config.inc.php" "$final_path/config/config.inc.php"
+	if [ -e "$final_path.old/galette/config/config.inc.php" ]; then
+	    cp "$final_path.old/galette/config/config.inc.php" "$final_path/galette/config/config.inc.php"
+	    cp "$final_path.old/galette/data" "$final_path/galette/data"
 	fi
 
 	# delete temp directory
