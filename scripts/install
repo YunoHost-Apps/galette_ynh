@@ -69,7 +69,7 @@ ynh_psql_setup_db --db_user=$db_name --db_name=$db_name
 ynh_script_progression --message="Configuring system user..." --weight=1
 
 # Create a system user
-ynh_system_user_create --username=$app --home_dir="$final_path"
+ynh_system_user_create --username=$app
 
 #=================================================
 # DOWNLOAD, CHECK AND UNPACK SOURCE
@@ -111,9 +111,6 @@ ynh_script_progression --message="Configuring Galette..." --weight=1
 
 ynh_add_config --template="../conf/config.inc.php.dist" --destination="$final_path/config/config.inc.php"
 
-#chown $app $final_path/config
-#chmod 775  $final_path/config
-
 #=================================================
 # GENERIC FINALIZATION
 #=================================================
@@ -121,7 +118,6 @@ ynh_add_config --template="../conf/config.inc.php.dist" --destination="$final_pa
 #=================================================
 
 # Set permissions
-
 chown -R root:www-data $final_path
 chmod -R o-rwx $final_path
 chmod u+rx  $final_path/config
@@ -136,8 +132,8 @@ done
 
 #for folder in attachments cache exports files imports logs photos templates_c tempimages
 #do
-    chown -R $app "$final_path/data/$folder"
-    chmod -R 775 "$final_path/data/$folder"
+ #   chown -R $app "$final_path/data/$folder"
+ #   chmod -R 775 "$final_path/data/$folder"
 #done
 
 #=================================================
