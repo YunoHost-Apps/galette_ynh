@@ -46,7 +46,18 @@ ynh_app_setting_set --app=$app --key=domain --value=$domain
 ynh_app_setting_set --app=$app --key=path --value=$path_url
 
 #=================================================
+<<<<<<< Updated upstream
 # CREATE A POSTGRESQL DATABASE
+=======
+# INSTALL DEPENDENCIES
+#=================================================
+ynh_script_progression --message="Installing dependencies..." --weight=20
+
+ynh_exec_warn_less ynh_install_app_dependencies $pkg_dependencies
+
+#=================================================
+# CREATE A MYSQL DATABASE
+>>>>>>> Stashed changes
 #=================================================
 ynh_script_progression --message="Creating a PostgreSQL database..." --weight=2
 
