@@ -17,6 +17,10 @@ Outil de gestion d'adhérents et de cotisation en ligne pour associations
 
 **Démo :** https://demo.galette.eu/login
 
+## Captures d'écran
+
+![](./doc/screenshots/edit_member.png)
+
 ## Documentations et ressources
 
 * Site officiel de l'app : https://www.galette.eu
