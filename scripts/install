@@ -170,7 +170,7 @@ Name: "$db_name"
 
 Important! Once done, please remember to run as root or with sudo:
 \`chmod -R 500 "$final_path/config"\`
-\`rm -fr "$final_path/install"\`
+\`Remove "$final_path/install"\`
 
 If you facing an issue or want to improve this app, please open a new issue in this project: https://github.com/YunoHost-Apps/galette_ynh"
 
