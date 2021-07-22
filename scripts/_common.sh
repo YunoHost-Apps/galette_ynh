@@ -7,6 +7,8 @@
 # dependencies used by the app
 pkg_dependencies="postgresql"
 
+YNH_COMPOSER_VERSION="2.0.13"
+
 # dependencies used by the app
 YNH_PHP_VERSION="7.3"
 

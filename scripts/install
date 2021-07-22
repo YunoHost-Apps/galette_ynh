@@ -112,6 +112,13 @@ ynh_script_progression --message="Configuring Galette..." --weight=1
 ynh_add_config --template="../conf/config.inc.php.dist" --destination="$final_path/config/config.inc.php"
 
 #=================================================
+# Install PHP dependencies using composer
+#=================================================
+ynh_script_progression --message="Configuring Composer..." --weight=1
+
+ynh_install_composer
+
+#=================================================
 # GENERIC FINALIZATION
 #=================================================
 # SECURE FILES AND DIRECTORIES
