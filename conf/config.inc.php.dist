@@ -1,25 +1,41 @@
 <?php
-/*
-This is an example for your configuration file,
-read comments and replace the "blanks".
-You can then copy the file in GALETTE_CONFIG_PATH/config.inc.php
 
-$Id$
-*/
+/**
+ * PostgreSQL configuration file for tests
+ *
+ * PHP version 5
+ *
+ * @category  Tests
+ * @package   Galette
+ *
+ * @author    Johan Cwiklinski <johan@x-tnd.be>
+ * @copyright 2012-2014 The Galette Team
+ * @license   http://www.gnu.org/licenses/gpl-3.0.html GPL License 3.0 or (at your option) any later version
+ * @version   SVN: $Id$
+ * @link      http://galette.tuxfamily.org
+ * @since     Available since 0.7.3dev 2012-12-12
+ */
 
-/* choose your database engine, values : pgsql|mysql */
-define("TYPE_DB", "mysql"); 
-/* hostname for the database */
-define("HOST_DB", "localhost"); 
-/* tcp port for the database */
-define("PORT_DB", "3306"); 
-/* the username for the database */
-define("USER_DB", "__DB_NAME__");
-/* password for the username define above */
-define("PWD_DB", "__DB_PWD__");
-/* the database name */
-define("NAME_DB", "__DB_NAME__");
-/* tables name prefix (default is galette_) */
-define("PREFIX_DB", "galette_");
-/* FIXME will disappear soon */
-define("STOCK_FILES", "tempimages");
+define("TYPE_DB", "pgsql");
+
+if (file_exists(__DIR__ . '/local_config.inc.php')) {
+    include_once __DIR__ . '/local_config.inc.php';
+}
+if (!defined('HOST_DB')) {
+    define("HOST_DB", "localhost");
+}
+if (!defined('PORT_DB')) {
+    define("PORT_DB", "5432");
+}
+if (!defined('USER_DB')) {
+    define("USER_DB", "__DB_NAME__");
+}
+if (!defined('PWD_DB')) {
+    define("PWD_DB", "__DB_PWD__");
+}
+if (!defined('NAME_DB')) {
+    define("NAME_DB", "__DB_NAME__");
+}
+if (!defined('PREFIX_DB')) {
+    define("PREFIX_DB", "galette_");
+}
