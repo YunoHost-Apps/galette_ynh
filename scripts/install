@@ -103,8 +103,8 @@ ynh_script_progression --message="Configuring Galette..." --weight=1
 
 ynh_add_config --template="../conf/config.inc.php.dist" --destination="$final_path/config/config.inc.php"
 
-chmod 400 "$final_path/config/config.inc.php"
-chown $app "$final_path/config/config.inc.php"
+#chmod 400 "$final_path/config/config.inc.php"
+#chown $app "$final_path/config/config.inc.php"
 
 #=================================================
 # GENERIC FINALIZATION
@@ -114,8 +114,10 @@ chown $app "$final_path/config/config.inc.php"
 
 #for folder in attachments cache exports files imports logs photos templates_c tempimages
 #do
-    chown -R $app "$final_path/data/$folder"
-    chmod -R 775 "$final_path/data/$folder"
+    chown -R $app "$final_path/data"
+    chmod -R 775 "$final_path/data"
+    chown -R $app "$final_path/config"
+    chmod -R 775 "$final_path/config"
 #done
 
 #=================================================
