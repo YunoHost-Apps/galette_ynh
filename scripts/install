@@ -114,13 +114,13 @@ ynh_add_config --template="../conf/config.inc.php.dist" --destination="$final_pa
 # SECURE FILES AND DIRECTORIES
 #=================================================
 
-chmod u+rx  $final_path/galette/config
-chmod g+rwx $final_path/galette/config
+chown $app $final_path/galette/config
+chmod 775 $final_path/galette/config
 
 for folder in attachments cache exports files imports logs photos templates_c tempimages
 do
    chown $app  $final_path/galette/data/$folder
-    chmod g+rwx $final_path/galette/data/$folder
+   chmod g+rwx $final_path/galette/data/$folder
 done
 
 #=================================================
