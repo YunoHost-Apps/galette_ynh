@@ -112,11 +112,11 @@ chown $app "$final_path/config/config.inc.php"
 # SECURE FILES AND DIRECTORIES
 #=================================================
 
-for folder in attachments cache exports files imports logs photos templates_c tempimages
-do
-    chown $app "$final_path/data/$folder"
-    chmod 750 "$final_path/data/$folder"
-done
+#for folder in attachments cache exports files imports logs photos templates_c tempimages
+#do
+    chown -R $app "$final_path/data/$folder"
+    chmod -R 775 "$final_path/data/$folder"
+#done
 
 #=================================================
 # SETUP LOGROTATE
