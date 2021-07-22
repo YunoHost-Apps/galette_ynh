@@ -109,7 +109,7 @@ phpversion=$(ynh_app_setting_get --app=$app --key=phpversion)
 #=================================================
 ynh_script_progression --message="Configuring Galette..." --weight=1
 
-ynh_add_config --template="../conf/config.inc.php.dist" --destination="$final_path/config/config.inc.php"
+ynh_add_config --template="../conf/config.inc.php.dist" --destination="$final_path/galette/config/config.inc.php"
 
 # #=================================================
 # # Install PHP dependencies using composer
@@ -124,13 +124,13 @@ ynh_add_config --template="../conf/config.inc.php.dist" --destination="$final_pa
 # SECURE FILES AND DIRECTORIES
 #=================================================
 
-chmod u+rx  $final_path/config
-chmod g+rwx $final_path/config
+chmod u+rx  $final_path/galette/config
+chmod g+rwx $final_path/galette/config
 
 for folder in attachments cache exports files imports logs photos templates_c tempimages
 do
-   chown $app  $final_path/data/$folder
-    chmod g+rwx $final_path/data/$folder
+   chown $app  $final_path/galette/data/$folder
+    chmod g+rwx $final_path/galette/data/$folder
 done
 
 #=================================================
