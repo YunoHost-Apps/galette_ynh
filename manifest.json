@@ -6,7 +6,7 @@
         "en": "Membership management web application for non profit organizations",
         "fr": "Outil de gestion d'adhérents et de cotisation en ligne pour associations"
     },
-    "version": "0.9.5~ynh1",
+    "version": "0.9.4.2~ynh1",
     "url": "https://www.galette.eu",
     "upstream": {
         "license": "GPL-3.0-or-later",
