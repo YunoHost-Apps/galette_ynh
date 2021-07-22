@@ -112,13 +112,11 @@ ynh_add_config --template="../conf/config.inc.php.dist" --destination="$final_pa
 # SECURE FILES AND DIRECTORIES
 #=================================================
 
-#for folder in attachments cache exports files imports logs photos templates_c tempimages
-#do
-    chown -R $app "$final_path/data"
-    chmod -R 775 "$final_path/data"
-    chown -R $app "$final_path/config"
-    chmod -R 775 "$final_path/config"
-#done
+for folder in attachments cache exports files imports logs photos templates_c tempimages
+do
+    chown -R $app "$final_path/data/$folder"
+    chmod -R 775 "$final_path/data/$folder"
+done
 
 #=================================================
 # SETUP LOGROTATE
@@ -130,7 +128,7 @@ ynh_use_logrotate
 #=================================================
 # SETUP SSOWAT
 #=================================================
-ynh_script_progression --message="Configuring SSOwat..." --weight=1
+ynh_script_progression --message="Configuring permissions..." --weight=1
 
 # Make app public if necessary or protect it
 if [ $is_public -eq 1 ]
