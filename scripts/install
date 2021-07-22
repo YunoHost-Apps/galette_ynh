@@ -20,11 +20,12 @@ ynh_abort_if_errors
 # RETRIEVE ARGUMENTS FROM THE MANIFEST
 #=================================================
 
-app=$YNH_APP_INSTANCE_NAME
-
 domain=$YNH_APP_ARG_DOMAIN
 path_url=$YNH_APP_ARG_PATH
 is_public=$YNH_APP_ARG_IS_PUBLIC
+timezone="$(cat /etc/timezone)"
+
+app=$YNH_APP_INSTANCE_NAME
 
 #=================================================
 # CHECK IF THE APP CAN BE INSTALLED WITH THESE ARGS
@@ -46,9 +47,6 @@ ynh_app_setting_set --app=$app --key=domain --value=$domain
 ynh_app_setting_set --app=$app --key=path --value=$path_url
 
 #=================================================
-<<<<<<< Updated upstream
-# CREATE A POSTGRESQL DATABASE
-=======
 # INSTALL DEPENDENCIES
 #=================================================
 ynh_script_progression --message="Installing dependencies..." --weight=20
@@ -56,8 +54,7 @@ ynh_script_progression --message="Installing dependencies..." --weight=20
 ynh_exec_warn_less ynh_install_app_dependencies $pkg_dependencies
 
 #=================================================
-# CREATE A MYSQL DATABASE
->>>>>>> Stashed changes
+# CREATE A POSTGRESQL DATABASE
 #=================================================
 ynh_script_progression --message="Creating a PostgreSQL database..." --weight=2
 
@@ -83,12 +80,12 @@ ynh_app_setting_set --app=$app --key=final_path --value=$final_path
 # Download, check integrity, uncompress and patch the source from app.src
 ynh_setup_source --dest_dir="$final_path"
 
-mv "$final_path"/galette/* "$final_path"/
-ynh_secure_remove "$final_path"/tests
+mv $final_path/galette/* $final_path/
+ynh_secure_remove $final_path/tests
 
-chmod 750 "$final_path"
-chmod -R o-rwx "$final_path"
-chown -R $app:www-data "$final_path"
+chmod 750 $final_path
+chmod -R o-rwx $final_path
+chown -R $app:www-data $final_path
 
 #=================================================
 # NGINX CONFIGURATION
@@ -115,7 +112,7 @@ ynh_script_progression --message="Configuring Galette..." --weight=1
 ynh_add_config --template="../conf/config.inc.php.dist" --destination="$final_path/config/config.inc.php"
 
 chown $app $final_path/config
-chmod 750  $final_path/config
+chmod 775  $final_path/config
 
 #=================================================
 # GENERIC FINALIZATION
@@ -132,6 +129,7 @@ done
 #=================================================
 # SETUP LOGROTATE
 #=================================================
+ynh_script_progression --message="Configuring log rotation..." --weight=1
 
 # Use logrotate to manage application logfile(s)
 ynh_use_logrotate
@@ -144,7 +142,7 @@ ynh_script_progression --message="Configuring permissions..." --weight=1
 # Make app public if necessary or protect it
 if [ $is_public -eq 1 ]
 then
-	ynh_permission_update --permission "main" --add "visitors"
+	ynh_permission_update --permission="main" --add="visitors"
 fi
 
 #=================================================
