@@ -20,83 +20,103 @@ ynh_abort_if_errors
 # RETRIEVE ARGUMENTS FROM THE MANIFEST
 #=================================================
 
-app=$YNH_APP_INSTANCE_NAME
-
 domain=$YNH_APP_ARG_DOMAIN
 path_url=$YNH_APP_ARG_PATH
 is_public=$YNH_APP_ARG_IS_PUBLIC
+timezone="$(cat /etc/timezone)"
+
+app=$YNH_APP_INSTANCE_NAME
 
 #=================================================
 # CHECK IF THE APP CAN BE INSTALLED WITH THESE ARGS
 #=================================================
+ynh_script_progression --message="Validating installation parameters..." --weight=1
 
 final_path=/var/www/$app
 test ! -e "$final_path" || ynh_die "This path already contains a folder"
 
-# Normalize the url path syntax
-path_url=$(ynh_normalize_url_path "$path_url")
-
-# Check web path availability
-ynh_webpath_available "$domain" "$path_url"
 # Register (book) web path
-ynh_webpath_register "$app" "$domain" "$path_url"
+ynh_webpath_register --app=$app --domain=$domain --path_url=$path_url
 
 #=================================================
 # STORE SETTINGS FROM MANIFEST
 #=================================================
+ynh_script_progression --message="Storing installation settings..." --weight=1
 
-ynh_app_setting_set "$app" domain "$domain"
-ynh_app_setting_set "$app" path   "$path_url"
-ynh_app_setting_set "$app" is_public "$is_public"
+ynh_app_setting_set --app=$app --key=domain --value=$domain
+ynh_app_setting_set --app=$app --key=path --value=$path_url
 
 #=================================================
 # INSTALL DEPENDENCIES
 #=================================================
+ynh_script_progression --message="Installing dependencies..." --weight=20
 
-ynh_install_php --phpversion="$php_version" --package="$php_packages"
-
-#=================================================
-# CREATE A MYSQL DATABASE
-#=================================================
-# If your app uses a MySQL database, you can use these lines to bootstrap
-# a database, an associated user and save the password in app settings
-
-db_name=$(ynh_sanitize_dbid "$app")
-db_pwd=$(ynh_string_random 15)
-ynh_app_setting_set "$app" db_name "$db_name"
-ynh_mysql_setup_db "$db_name" "$db_name" "$db_pwd"
+ynh_exec_warn_less ynh_install_app_dependencies $pkg_dependencies
 
 #=================================================
-# DOWNLOAD, CHECK AND UNPACK SOURCE
+# CREATE A POSTGRESQL DATABASE
 #=================================================
+ynh_script_progression --message="Creating a PostgreSQL database..." --weight=2
 
-ynh_app_setting_set "$app" final_path "$final_path"
-# Download, check integrity, uncompress and patch the source from app.src
-ynh_setup_source "$final_path"
-mv "$final_path"/galette/* "$final_path"/
-ynh_secure_remove "$final_path"/tests
-chown -R root:root "$final_path"
-
-#=================================================
-# NGINX CONFIGURATION
-#=================================================
-
-# Create a dedicated nginx config
-ynh_add_nginx_config
+db_name=$(ynh_sanitize_dbid --db_name=$app)
+ynh_app_setting_set --app=$app --key=db_name --value=$db_name
+ynh_psql_test_if_first_run
+ynh_psql_setup_db --db_user=$db_name --db_name=$db_name
 
 #=================================================
 # CREATE DEDICATED USER
 #=================================================
+ynh_script_progression --message="Configuring system user..." --weight=1
 
 # Create a system user
-ynh_system_user_create "$app"
+ynh_system_user_create --username=$app --home_dir="$final_path"
+
+#=================================================
+# DOWNLOAD, CHECK AND UNPACK SOURCE
+#=================================================
+ynh_script_progression --message="Setting up source files..." --weight=1
+
+ynh_app_setting_set --app=$app --key=final_path --value=$final_path
+# Download, check integrity, uncompress and patch the source from app.src
+ynh_setup_source --dest_dir="$final_path"
+
+# mv $final_path/galette/* $final_path/
+# ynh_secure_remove $final_path/tests
+
+chmod 750 $final_path
+chmod -R o-rwx $final_path
+chown -R $app:www-data $final_path
+
+#=================================================
+# NGINX CONFIGURATION
+#=================================================
+ynh_script_progression --message="Configuring NGINX web server..." --weight=1
+
+# Create a dedicated NGINX config
+ynh_add_nginx_config
 
 #=================================================
 # PHP-FPM CONFIGURATION
 #=================================================
+ynh_script_progression --message="Configuring PHP-FPM..." --weight=2
 
-# Create a dedicated php-fpm config
-ynh_add_fpm_config --phpversion="$php_version"
+# Create a dedicated PHP-FPM config
+ynh_add_fpm_config --package="$extra_php_dependencies"
+phpversion=$(ynh_app_setting_get --app=$app --key=phpversion)
+
+#=================================================
+# CONFIGURE GALETTE
+#=================================================
+ynh_script_progression --message="Configuring Galette..." --weight=1
+
+ynh_add_config --template="../conf/config.inc.php.dist" --destination="$final_path/galette/config/config.inc.php"
+
+# #=================================================
+# # Install PHP dependencies using composer
+# #=================================================
+# ynh_script_progression --message="Configuring Composer..." --weight=1
+
+# ynh_install_composer
 
 #=================================================
 # GENERIC FINALIZATION
@@ -104,18 +124,19 @@ ynh_add_fpm_config --phpversion="$php_version"
 # SECURE FILES AND DIRECTORIES
 #=================================================
 
-chown "$app"  "$final_path/config"
-chmod 750     "$final_path/config"
+chmod u+rx  $final_path/galette/config
+chmod g+rwx $final_path/galette/config
 
 for folder in attachments cache exports files imports logs photos templates_c tempimages
 do
-    chown "$app"  "$final_path/data/$folder"
-    chmod 750     "$final_path/data/$folder"
+   chown $app  $final_path/galette/data/$folder
+    chmod g+rwx $final_path/galette/data/$folder
 done
 
 #=================================================
 # SETUP LOGROTATE
 #=================================================
+ynh_script_progression --message="Configuring log rotation..." --weight=1
 
 # Use logrotate to manage application logfile(s)
 ynh_use_logrotate
@@ -123,32 +144,20 @@ ynh_use_logrotate
 #=================================================
 # SETUP SSOWAT
 #=================================================
+ynh_script_progression --message="Configuring permissions..." --weight=1
 
-if [[ "$path_url" == "/" ]]
+# Make app public if necessary or protect it
+if [ $is_public -eq 1 ]
 then
-	# ynh panel is only comptable with non-root installation
-	ynh_replace_string "  include conf.d/" "  #include conf.d/" "$finalnginxconf"
-else
-	ynh_replace_string "^#sub_path_only"   ""                   "$finalnginxconf"
-fi
-ynh_store_file_checksum "$finalnginxconf"
-
-if [ "$is_public" -eq 0 ]
-then	# Remove the public access
-	ynh_app_setting_delete "$app" skipped_uris
-fi
-# Make app public if necessary
-if [ "$is_public" -eq 1 ]
-then
-	# unprotected_uris allows SSO credentials to be passed anyway.
-	ynh_app_setting_set "$app" skipped_uris "/"
+	ynh_permission_update --permission="main" --add="visitors"
 fi
 
 #=================================================
 # RELOAD NGINX
 #=================================================
+ynh_script_progression --message="Reloading NGINX web server..." --weight=2
 
-systemctl reload nginx
+ynh_systemd_action --service_name=nginx --action=reload
 
 #=================================================
 # SEND A README FOR THE ADMIN
@@ -156,20 +165,26 @@ systemctl reload nginx
 
 message="Galette need you to finish the installation manually.
 
-Please open "$domain/$path_url" and finish the install process.
+Please open "https://$domain/$path_url/installer.php" and finish the install process.
 
 Database information you'll need:
-Type: mysql
+Type: pgsql
 Host: localhost
-Port: 3306
+Port: 5432
 User: "$db_name"
 Password: "$db_pwd"
 Name: "$db_name"
 
 Important! Once done, please remember to run as root or with sudo:
 \`chmod -R 500 "$final_path/config"\`
-\`rm -fr "$final_path/install"\`
+\`Remove "$final_path/install"\`
 
 If you facing an issue or want to improve this app, please open a new issue in this project: https://github.com/YunoHost-Apps/galette_ynh"
 
 ynh_send_readme_to_admin "$message"
+
+#=================================================
+# END OF SCRIPT
+#=================================================
+
+ynh_script_progression --message="Installation of $app completed" --last

@@ -1,11 +1,4 @@
 #!/bin/bash
-#
-#
-# No upgrade script is available at the moment. 
-#
-# If you really need to upgrade, please check the official documentation :
-# http://galette.eu/documentation/fr/installation/update.html
-#
 
 #=================================================
 # GENERIC START
@@ -19,28 +12,42 @@ source /usr/share/yunohost/helpers
 #=================================================
 # LOAD SETTINGS
 #=================================================
+ynh_script_progression --message="Loading installation settings..." --weight=1
 
 app=$YNH_APP_INSTANCE_NAME
 
-domain=$(ynh_app_setting_get "$app" domain)
-path_url=$(ynh_app_setting_get "$app" path)
-is_public=$(ynh_app_setting_get "$app" is_public)
-final_path=$(ynh_app_setting_get "$app" final_path)
-db_name=$(ynh_app_setting_get "$app" db_name)
-db_pwd=$(ynh_app_setting_get "$app" mysqlpwd)
+domain=$(ynh_app_setting_get --app=$app --key=domain)
+path_url=$(ynh_app_setting_get --app=$app --key=path)
+final_path=$(ynh_app_setting_get --app=$app --key=final_path)
+db_name=$(ynh_app_setting_get --app=$app --key=db_name)
+db_pwd=$(ynh_app_setting_get --app=$app --key=mysqlpwd)
+phpversion=$(ynh_app_setting_get --app=$app --key=phpversion)
+timezone="$(cat /etc/timezone)"
+
+#=================================================
+# CHECK VERSION
+#=================================================
+
+upgrade_type=$(ynh_check_app_version_changed)
+
+#=================================================
+# BACKUP BEFORE UPGRADE THEN ACTIVE TRAP
+#=================================================
+ynh_script_progression --message="Backing up the app before upgrading (may take a while)..." --weight=1
+
+# Backup the current version of the app
+ynh_backup_before_upgrade
+ynh_clean_setup () {
+	# Restore it if the upgrade fails
+	ynh_restore_upgradebackup
+}
+# Exit if an error occurs during the execution of the script
+ynh_abort_if_errors
 
 #=================================================
 # ENSURE DOWNWARD COMPATIBILITY
 #=================================================
-
-# Fix is_public as a boolean value
-if [ "$is_public" = "Yes" ]; then
-	ynh_app_setting_set "$app" is_public 1
-	is_public=1
-elif [ "$is_public" = "No" ]; then
-	ynh_app_setting_set "$app" is_public 0
-	is_public=0
-fi
+ynh_script_progression --message="Ensuring downward compatibility..." --weight=2
 
 # If db_name doesn't exist, create it
 if [ -z "$db_name" ]; then
@@ -60,21 +67,20 @@ if [ -z "$final_path" ]; then
 	ynh_app_setting_set "$app" final_path "$final_path"
 fi
 
+# Cleaning legacy permissions
+if ynh_legacy_permissions_exists; then
+	ynh_legacy_permissions_delete_all
 
-
-#=================================================
-# BACKUP BEFORE UPGRADE THEN ACTIVE TRAP
-#=================================================
-
-# Exit if an error occurs during the execution of the script
-ynh_abort_if_errors
+	ynh_app_setting_delete --app=$app --key=is_public
+fi
 
 #=================================================
-# CHECK THE PATH
+# CREATE DEDICATED USER
 #=================================================
+ynh_script_progression --message="Making sure dedicated system user exists..." --weight=1
 
-# Normalize the URL path syntax
-path_url=$(ynh_normalize_url_path "$path_url")
+# Create a dedicated user (if not existing)
+ynh_system_user_create --username=$app --home_dir="$final_path"
 
 #=================================================
 # STANDARD UPGRADE STEPS
@@ -82,47 +88,46 @@ path_url=$(ynh_normalize_url_path "$path_url")
 # DOWNLOAD, CHECK AND UNPACK SOURCE
 #=================================================
 
-# Download, check integrity, uncompress and patch the source from app.src
-mv "$final_path" "$final_path.old"
+if [ "$upgrade_type" == "UPGRADE_APP" ]
+then
+	# Download, check integrity, uncompress and patch the source from app.src
+	mv "$final_path" "$final_path.old"
 
-ynh_setup_source "$final_path"
-mv "$final_path"/galette/* "$final_path"/
-ynh_secure_remove "$final_path"/tests
+	ynh_setup_source "$final_path"
+	#ynh_secure_remove "$final_path"/tests
 
-# when running automatic tests, there is no config.inc.php
-if [ -e "$final_path.old/config/config.inc.php" ]; then
-    cp "$final_path.old/config/config.inc.php" "$final_path/config/config.inc.php"
+	# when running automatic tests, there is no config.inc.php
+	if [ -e "$final_path.old/galette/config/config.inc.php" ]; then
+	    cp "$final_path.old/galette/config/config.inc.php" "$final_path/galette/config/config.inc.php"
+	    cp "$final_path.old/galette/data" "$final_path/galette/data"
+	fi
+
+	# delete temp directory
+	ynh_secure_remove "$final_path.old"
 fi
-
-# delete temp directory
-ynh_secure_remove "$final_path.old"
 
 #=================================================
 # NGINX CONFIGURATION
 #=================================================
+ynh_script_progression --message="Upgrading NGINX web server configuration..." --weight=2
 
-# Create a dedicated nginx config
+# Create a dedicated NGINX config
 ynh_add_nginx_config
 
 #=================================================
-# INSTALL DEPENDENCIES
+# UPGRADE DEPENDENCIES
 #=================================================
+ynh_script_progression --message="Upgrading dependencies..." --weight=1
 
-ynh_install_php --phpversion="$php_version" --package="$php_packages"
-
-#=================================================
-# CREATE DEDICATED USER
-#=================================================
-
-# Create a system user
-ynh_system_user_create "$app"
+ynh_install_app_dependencies $pkg_dependencies
 
 #=================================================
 # PHP-FPM CONFIGURATION
 #=================================================
+ynh_script_progression --message="Upgrading PHP-FPM configuration..." --weight=2
 
-# Create a dedicated php-fpm config
-ynh_add_fpm_config --phpversion="$php_version"
+# Create a dedicated PHP-FPM config
+ynh_add_fpm_config --package="$extra_php_dependencies"
 
 #=================================================
 # SPECIFIC UPGRADE
@@ -139,65 +144,26 @@ ynh_use_logrotate --non-append
 # SECURE FILES AND DIRECTORIES
 #=================================================
 
-# TODO: improve permissions
-
-chown -R root:root "$final_path"
-
-chown "$app"  "$final_path/config"
-chmod 750     "$final_path/config"
+chown "$app" "$final_path/config"
+chmod 750 "$final_path/config"
 
 for folder in attachments cache exports files imports logs photos templates_c tempimages
 do
-    chown "$app"  "$final_path/data/$folder"
-    chmod 750     "$final_path/data/$folder"
+    chown "$app" "$final_path/data/$folder"
+    chmod 775 "$final_path/data/$folder"
 done
 
 #=================================================
-# SETUP SSOWAT
-#=================================================
-
-if [[ "$path_url" == "/" ]]
-then
-	# ynh panel is only comptable with non-root installation
-	ynh_replace_string "  include conf.d/" "  #include conf.d/" "$finalnginxconf"
-else
-	ynh_replace_string "^#sub_path_only"   ""                   "$finalnginxconf"
-fi
-ynh_store_file_checksum "$finalnginxconf"
-
-if [ $is_public -eq 0 ]
-then	# Remove the public access
-	ynh_app_setting_delete "$app" skipped_uris
-fi
-# Make app public if necessary
-if [ $is_public -eq 1 ]
-then
-	# unprotected_uris allows SSO credentials to be passed anyway
-	ynh_app_setting_set "$app" skipped_uris "/"
-fi
-
+# GENERIC FINALIZATION
 #=================================================
 # RELOAD NGINX
 #=================================================
+ynh_script_progression --message="Reloading NGINX web server..." --weight=2
 
-systemctl reload nginx
+ynh_systemd_action --service_name=nginx --action=reload
 
-message="Galette need you to finish the update manually.
+#=================================================
+# END OF SCRIPT
+#=================================================
 
-Please open "$domain/$path_url" and finish the upgrade process.
-
-You may need database information:
-Type: mysql
-Host: localhost
-Port: 3306
-User: "$db_name"
-Password: "$db_pwd"
-Name: "$db_name"
-
-Important! Once done, please remember to run as root or with sudo:
-\`chmod -R 500 "$final_path/config"\`
-\`rm -fr "$final_path/install"\`
-
-If you facing an issue or want to improve this app, please open a new issue in this project: https://github.com/YunoHost-Apps/galette_ynh"
-
-ynh_send_readme_to_admin "$message"
+ynh_script_progression --message="Upgrade of $app completed" --last
