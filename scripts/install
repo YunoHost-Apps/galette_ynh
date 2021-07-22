@@ -80,8 +80,8 @@ ynh_app_setting_set --app=$app --key=final_path --value=$final_path
 # Download, check integrity, uncompress and patch the source from app.src
 ynh_setup_source --dest_dir="$final_path"
 
-mv $final_path/galette/* $final_path/
-ynh_secure_remove $final_path/tests
+# mv $final_path/galette/* $final_path/
+# ynh_secure_remove $final_path/tests
 
 chmod 750 $final_path
 chmod -R o-rwx $final_path
@@ -111,12 +111,12 @@ ynh_script_progression --message="Configuring Galette..." --weight=1
 
 ynh_add_config --template="../conf/config.inc.php.dist" --destination="$final_path/config/config.inc.php"
 
-#=================================================
-# Install PHP dependencies using composer
-#=================================================
-ynh_script_progression --message="Configuring Composer..." --weight=1
+# #=================================================
+# # Install PHP dependencies using composer
+# #=================================================
+# ynh_script_progression --message="Configuring Composer..." --weight=1
 
-ynh_install_composer
+# ynh_install_composer
 
 #=================================================
 # GENERIC FINALIZATION
