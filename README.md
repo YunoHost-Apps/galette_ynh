@@ -21,6 +21,10 @@ Membership management web application for non profit organizations
 
 **Demo:** https://demo.galette.eu/login
 
+## Screenshots
+
+![](./doc/screenshots/edit_member.png)
+
 ## Documentation and resources
 
 * Official app website: https://www.galette.eu
