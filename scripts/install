@@ -116,7 +116,7 @@ ynh_add_config --template="../conf/config.inc.php.dist" --destination="$final_pa
 #=================================================
 ynh_script_progression --message="Configuring Composer..." --weight=1
 
-ynh_install_composer --workdir=$final_path/webroot
+ynh_install_composer
 
 #=================================================
 # GENERIC FINALIZATION
