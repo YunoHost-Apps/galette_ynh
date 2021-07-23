@@ -21,6 +21,13 @@ Outil de gestion d'adhérents et de cotisation en ligne pour associations
 
 ![](./doc/screenshots/edit_member.png)
 
+## Avertissements / informations importantes
+
+## Configuration
+
+1. Une fois l'installation terminée, l'application devra terminer le processus d'enregistrement en **visitant le domaine** sur lequel Galette est installé.
+1. Les informations d'identification de la base de données Postgresql seront envoyées à **l'email admin**. Remplissez ces détails lors du processus d'inscription.
+
 ## Documentations et ressources
 
 * Site officiel de l'app : https://www.galette.eu

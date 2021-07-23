@@ -25,6 +25,13 @@ Membership management web application for non profit organizations
 
 ![](./doc/screenshots/edit_member.png)
 
+## Disclaimers / important information
+
+## Configuration
+
+1. The app will require to complete the registration process after the instllation is complete by visiting the domain on which Galette is installed.
+1. The Postgresql database credentials will be sent to the admin mail. Fill these details while doing the registration process.
+
 ## Documentation and resources
 
 * Official app website: https://www.galette.eu
