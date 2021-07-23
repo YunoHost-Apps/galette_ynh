@@ -2,7 +2,6 @@
 	; Manifest
 		domain="domain.tld"
 		path="/path"
-		admin="john"
 		is_public=1
 		password="strong-password"
 	; Checks
@@ -13,7 +12,7 @@
 		setup_private=1
 		setup_public=1
 		upgrade=1
-		#upgrade=1		from_commit=65cd8b542310e8b349107ed222fdc57e3c2d239a
+		#upgrade=1		from_commit=
 		backup_restore=1
 		multi_instance=1
 		change_url=0
@@ -21,6 +20,6 @@
 Email=jean-baptiste@holcroft.fr
 Notification=all
 ;;; Upgrade options
-	; commit=65cd8b542310e8b349107ed222fdc57e3c2d239a
-		name=Upgrade from 0.9.1.2
+	; commit=
+		name=
 manifest_arg=domain=DOMAIN&path=PATH&admin=USER&is_public=1
