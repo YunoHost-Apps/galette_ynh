@@ -99,7 +99,7 @@ then
 	# when running automatic tests, there is no config.inc.php
 	if [ -e "$final_path.old/galette/config/config.inc.php" ]; then
 	    cp "$final_path.old/galette/config/config.inc.php" "$final_path/galette/config/config.inc.php"
-	    cp "$final_path.old/galette/data" "$final_path/galette/data"
+	    cp -r "$final_path.old/galette/data" "$final_path/galette/data"
 	fi
 
 	# delete temp directory
