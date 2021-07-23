@@ -80,9 +80,6 @@ ynh_app_setting_set --app=$app --key=final_path --value=$final_path
 # Download, check integrity, uncompress and patch the source from app.src
 ynh_setup_source --dest_dir="$final_path"
 
-# mv $final_path/galette/* $final_path/
-# ynh_secure_remove $final_path/tests
-
 chmod 750 $final_path
 chmod -R o-rwx $final_path
 chown -R $app:www-data $final_path
@@ -100,7 +97,6 @@ ynh_add_nginx_config
 #=================================================
 ynh_script_progression --message="Configuring PHP-FPM..." --weight=2
 
-# Create a dedicated PHP-FPM config
 ynh_add_fpm_config --package="$extra_php_dependencies"
 phpversion=$(ynh_app_setting_get --app=$app --key=phpversion)
 
@@ -111,26 +107,19 @@ ynh_script_progression --message="Configuring Galette..." --weight=1
 
 ynh_add_config --template="../conf/config.inc.php.dist" --destination="$final_path/galette/config/config.inc.php"
 
-# #=================================================
-# # Install PHP dependencies using composer
-# #=================================================
-# ynh_script_progression --message="Configuring Composer..." --weight=1
-
-# ynh_install_composer
-
 #=================================================
 # GENERIC FINALIZATION
 #=================================================
 # SECURE FILES AND DIRECTORIES
 #=================================================
 
-chmod u+rx  $final_path/galette/config
+chown $app  $final_path/galette/config
 chmod g+rwx $final_path/galette/config
 
 for folder in attachments cache exports files imports logs photos templates_c tempimages
 do
    chown $app  $final_path/galette/data/$folder
-    chmod g+rwx $final_path/galette/data/$folder
+   chmod g+rwx $final_path/galette/data/$folder
 done
 
 #=================================================
