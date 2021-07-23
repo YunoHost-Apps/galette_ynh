@@ -1,55 +1,55 @@
 {
     "name": "Galette",
     "id": "galette",
-    "description": {
+    "packaging_format": 1,
+        "description": {
         "en": "Membership management web application for non profit organizations",
         "fr": "Outil de gestion d'adhérents et de cotisation en ligne pour associations"
     },
-    "licence": "free",
-    "maintainer": {
-        "name": "Jean-Baptiste Holcroft",
-        "email": "jean-baptiste@holcroft.fr"
+    "version": "0.9.4.2~ynh1",
+    "url": "https://www.galette.eu",
+    "upstream": {
+        "license": "GPL-3.0-or-later",
+        "website": "https://www.galette.eu",
+        "demo": "https://demo.galette.eu/login",
+        "admindoc": "https://doc.galette.eu/fr/master/",
+        "userdoc": "https://yunohost.org/apps",
+        "code": "https://github.com/galette/galette"
     },
-    "multi_instance": "false",
+    "license": "GPL-3.0-or-later",
+    "maintainer": {
+        "name": "",
+        "email": ""
+    },
+    "requirements": {
+        "yunohost": ">= 4.2.4"
+    },
+    "multi_instance": true,
+    "services": [
+        "nginx",
+        "php7.3-fpm"
+    ],
     "arguments": {
-        "install" : [
+        "install": [
             {
                 "name": "domain",
-                "ask": {
-                    "en": "Choose a domain for galette"
-                },
+                "type": "domain",
                 "example": "example.com"
             },
             {
                 "name": "path",
-                "ask": {
-                    "en": "Choose a path for galette"
-                },
+                "type": "path",
                 "example": "/galette",
                 "default": "/galette"
             },
             {
-                "name": "admin",
-                "ask": {
-                    "en": "Admin login"
-                },
-                "example": "galette_admin",
-                "default": "galette_admin"
-            },
-            {
-                "name": "adminPass",
-                "ask": {
-                    "en": "Admin password"
-                },
-                "example": ""
-            },
-            {
                 "name": "is_public",
-                "ask": {
-                    "en": "Is it a public application ?"
-                },
-                "choices": ["Yes", "No"],
-                "default": "Yes"
+                "type": "boolean",
+                "help": {
+                    "en": "If enabled, Galette will be accessible by people who do not have an account. This can be changed later via the webadmin.",
+                    "fr": "Si cette case est cochée, Galette sera accessible aux personnes n’ayant pas de compte. Vous pourrez changer ceci plus tard via la webadmin."
+            },
+                "default": true
             }
         ]
     }
