@@ -49,6 +49,7 @@ test ! -d $final_path \
 # RESTORE THE NGINX CONFIGURATION
 #=================================================
 ynh_script_progression --message="Restoring the NGINX configuration..." --weight=1
+
 ynh_restore_file --origin_path="/etc/nginx/conf.d/$domain.d/$app.conf"
 
 #=================================================
@@ -99,13 +100,13 @@ ynh_psql_execute_file_as_root --file="./db.sql" --database=$db_name
 # RESTORE USER RIGHTS
 #=================================================
 
-chown "$app" "$final_path/config"
-chmod 750 "$final_path/config"
+chown "$app" "$final_path/galette/config"
+chmod 750 "$final_path/galette/config"
 
 for folder in attachments cache exports files imports logs photos templates_c tempimages
 do
-    chown "$app" "$final_path/data/$folder"
-    chmod 775 "$final_path/data/$folder"
+    chown "$app" "$final_path/galette/data/$folder"
+    chmod 775 "$final_path/galette/data/$folder"
 done
 
 #=================================================

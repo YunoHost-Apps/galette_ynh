@@ -13,13 +13,20 @@ Si vous n'avez pas YunoHost, regardez [ici](https://yunohost.org/#/install) pour
 
 Outil de gestion d'adhérents et de cotisation en ligne pour associations
 
-**Version incluse :** 0.9.5~ynh1
+**Version incluse :** 0.9.4.2~ynh1
 
 **Démo :** https://demo.galette.eu/login
 
 ## Captures d'écran
 
 ![](./doc/screenshots/edit_member.png)
+
+## Avertissements / informations importantes
+
+## Configuration
+
+1. Une fois l'installation terminée, l'application devra terminer le processus d'enregistrement en **visitant le domaine** sur lequel Galette est installé.
+1. Les informations d'identification de la base de données Postgresql seront envoyées à **l'email admin**. Remplissez ces détails lors du processus d'inscription.
 
 ## Documentations et ressources
 

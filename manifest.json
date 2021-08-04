@@ -6,7 +6,7 @@
         "en": "Membership management web application for non profit organizations",
         "fr": "Outil de gestion d'adhérents et de cotisation en ligne pour associations"
     },
-    "version": "0.9.5~ynh1",
+    "version": "0.9.4.2~ynh1",
     "url": "https://www.galette.eu",
     "upstream": {
         "license": "GPL-3.0-or-later",
@@ -27,8 +27,7 @@
     "multi_instance": true,
     "services": [
         "nginx",
-        "php7.3-fpm",
-        "mysql"
+        "php7.3-fpm"
     ],
     "arguments": {
         "install": [
@@ -46,6 +45,10 @@
             {
                 "name": "is_public",
                 "type": "boolean",
+                "help": {
+                    "en": "If enabled, Galette will be accessible by people who do not have an account. This can be changed later via the webadmin.",
+                    "fr": "Si cette case est cochée, Galette sera accessible aux personnes n’ayant pas de compte. Vous pourrez changer ceci plus tard via la webadmin."
+            },
                 "default": true
             }
         ]

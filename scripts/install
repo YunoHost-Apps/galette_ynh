@@ -97,7 +97,6 @@ ynh_add_nginx_config
 #=================================================
 ynh_script_progression --message="Configuring PHP-FPM..." --weight=2
 
-# Create a dedicated PHP-FPM config
 ynh_add_fpm_config --package="$extra_php_dependencies"
 phpversion=$(ynh_app_setting_get --app=$app --key=phpversion)
 
@@ -114,8 +113,8 @@ ynh_add_config --template="../conf/config.inc.php.dist" --destination="$final_pa
 # SECURE FILES AND DIRECTORIES
 #=================================================
 
-chown $app $final_path/galette/config
-chmod 775 $final_path/galette/config
+chown $app  $final_path/galette/config
+chmod g+rwx $final_path/galette/config
 
 for folder in attachments cache exports files imports logs photos templates_c tempimages
 do
@@ -155,19 +154,19 @@ ynh_systemd_action --service_name=nginx --action=reload
 
 message="Galette need you to finish the installation manually.
 
-Please open "$domain/$path_url" and finish the install process.
+Please open "https://$domain/$path_url/installer.php" and finish the install process.
 
 Database information you'll need:
-Type: pgsql
-Host: localhost
-Port: 5432
-User: "$db_name"
-Password: "$db_pwd"
-Name: "$db_name"
+Type:		pgsql
+Host:		localhost
+Port:		5432
+User:		"$db_name"
+Password:	"$db_pwd"
+Name:		"$db_name"
 
 Important! Once done, please remember to run as root or with sudo:
-\`chmod -R 500 "$final_path/galette/config"\`
-\`Remove "$final_path/galette/install"\`
+Restrict the rights of the config file \`chmod -R 500 "$final_path/galette/config"\`
+\`Remove the install file "$final_path/galette/install"\`
 
 If you facing an issue or want to improve this app, please open a new issue in this project: https://github.com/YunoHost-Apps/galette_ynh"
 

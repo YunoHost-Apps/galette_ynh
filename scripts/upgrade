@@ -20,7 +20,8 @@ domain=$(ynh_app_setting_get --app=$app --key=domain)
 path_url=$(ynh_app_setting_get --app=$app --key=path)
 final_path=$(ynh_app_setting_get --app=$app --key=final_path)
 db_name=$(ynh_app_setting_get --app=$app --key=db_name)
-db_pwd=$(ynh_app_setting_get --app=$app --key=mysqlpwd)
+db_user=$db_name
+db_pwd=$(ynh_app_setting_get --app=$app --key=psqlpwd)
 phpversion=$(ynh_app_setting_get --app=$app --key=phpversion)
 timezone="$(cat /etc/timezone)"
 
@@ -52,19 +53,19 @@ ynh_script_progression --message="Ensuring downward compatibility..." --weight=2
 # If db_name doesn't exist, create it
 if [ -z "$db_name" ]; then
 	db_name=$(ynh_sanitize_dbid "$app")
-	ynh_app_setting_set "$app" db_name "$db_name"
+	ynh_app_setting_set --app=$app --key=db_name --value=$db_name
 fi
 
 # If db_name doesn't exist, create it
 if [ -z "$db_pwd" ]; then
-	db_pwd=$(ynh_app_setting_get "$app" mysqlpassword)
-	ynh_app_setting_set "$app" mysqlpwd "$db_pwd"
+	db_pwd=$(ynh_app_setting_get --app=$app --key=psqlpwd)
+	ynh_app_setting_set --app=$app --key=psqlpwd --value=$db_pwd
 fi
 
 # If final_path doesn't exist, create it
 if [ -z "$final_path" ]; then
 	final_path="/var/www/$app"
-	ynh_app_setting_set "$app" final_path "$final_path"
+	ynh_app_setting_set --app=$app --key=final_path --value=$final_path
 fi
 
 # Cleaning legacy permissions
@@ -94,17 +95,21 @@ then
 	mv "$final_path" "$final_path.old"
 
 	ynh_setup_source "$final_path"
-	mv "$final_path"/galette/* "$final_path"/
-	ynh_secure_remove "$final_path"/tests
+	#ynh_secure_remove "$final_path"/tests
 
 	# when running automatic tests, there is no config.inc.php
-	if [ -e "$final_path.old/config/config.inc.php" ]; then
-	    cp "$final_path.old/config/config.inc.php" "$final_path/config/config.inc.php"
+	if [ -e "$final_path.old/galette/config/config.inc.php" ]; then
+	    cp "$final_path.old/galette/config/config.inc.php" "$final_path/galette/config/config.inc.php"
+	    cp -r "$final_path.old/galette/data" "$final_path/galette/data"
 	fi
 
 	# delete temp directory
 	ynh_secure_remove "$final_path.old"
 fi
+
+chmod 750 $final_path
+chmod -R o-rwx $final_path
+chown -R $app:www-data $final_path
 
 #=================================================
 # NGINX CONFIGURATION
@@ -144,13 +149,13 @@ ynh_use_logrotate --non-append
 # SECURE FILES AND DIRECTORIES
 #=================================================
 
-chown "$app" "$final_path/config"
-chmod 750 "$final_path/config"
+chown "$app" "$final_path/galette/config"
+chmod 750 "$final_path/galette/config"
 
 for folder in attachments cache exports files imports logs photos templates_c tempimages
 do
-    chown "$app" "$final_path/data/$folder"
-    chmod 775 "$final_path/data/$folder"
+    chown "$app" "$final_path/galette/data/$folder"
+    chmod 775 "$final_path/galette/data/$folder"
 done
 
 #=================================================
