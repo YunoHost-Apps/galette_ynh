@@ -17,7 +17,7 @@ If you don't have YunoHost, please consult [the guide](https://yunohost.org/#/in
 
 Membership management web application for non profit organizations
 
-**Shipped version:** 0.9.4.2~ynh1
+**Shipped version:** 0.9.5~ynh1
 
 **Demo:** https://demo.galette.eu/login
 
