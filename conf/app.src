@@ -1,5 +1,5 @@
-SOURCE_URL=https://download.tuxfamily.org/galette/galette-0.9.4.2.tar.bz2
-SOURCE_SUM=171bda8250cf0996d40a38e032d93881d67b059be98ed5af20ac00dbdf8630e3
+SOURCE_URL=https://download.tuxfamily.org/galette/galette-0.9.5.tar.bz2
+SOURCE_SUM=367ba461ed18ee2527d88da02dc9d52be4eb57bc661d778c4e35b1cfc356abfb
 SOURCE_SUM_PRG=sha256sum
 SOURCE_FORMAT=tar.gz
 SOURCE_IN_SUBDIR=true
