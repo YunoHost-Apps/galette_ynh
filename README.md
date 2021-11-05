@@ -17,7 +17,7 @@ If you don't have YunoHost, please consult [the guide](https://yunohost.org/#/in
 
 Membership management web application for non profit organizations
 
-**Shipped version:** 0.9.5~ynh1
+**Shipped version:** 0.9.5.1~ynh1
 
 **Demo:** https://demo.galette.eu/login
 
@@ -35,7 +35,6 @@ Membership management web application for non profit organizations
 ## Documentation and resources
 
 * Official app website: https://www.galette.eu
-* Official user documentation: https://yunohost.org/apps
 * Official admin documentation: https://doc.galette.eu/fr/master/
 * Upstream app code repository: https://github.com/galette/galette
 * YunoHost documentation for this app: https://yunohost.org/app_galette

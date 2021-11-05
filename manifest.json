@@ -6,14 +6,13 @@
         "en": "Membership management web application for non profit organizations",
         "fr": "Outil de gestion d'adhérents et de cotisation en ligne pour associations"
     },
-    "version": "0.9.5~ynh1",
+    "version": "0.9.5.1~ynh1",
     "url": "https://www.galette.eu",
     "upstream": {
         "license": "GPL-3.0-or-later",
         "website": "https://www.galette.eu",
         "demo": "https://demo.galette.eu/login",
         "admindoc": "https://doc.galette.eu/fr/master/",
-        "userdoc": "https://yunohost.org/apps",
         "code": "https://github.com/galette/galette"
     },
     "license": "GPL-3.0-or-later",
@@ -33,8 +32,7 @@
         "install": [
             {
                 "name": "domain",
-                "type": "domain",
-                "example": "example.com"
+                "type": "domain"
             },
             {
                 "name": "path",

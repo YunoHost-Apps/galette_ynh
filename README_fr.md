@@ -13,7 +13,7 @@ Si vous n'avez pas YunoHost, regardez [ici](https://yunohost.org/#/install) pour
 
 Outil de gestion d'adhérents et de cotisation en ligne pour associations
 
-**Version incluse :** 0.9.5~ynh1
+**Version incluse :** 0.9.5.1~ynh1
 
 **Démo :** https://demo.galette.eu/login
 
@@ -31,7 +31,6 @@ Outil de gestion d'adhérents et de cotisation en ligne pour associations
 ## Documentations et ressources
 
 * Site officiel de l'app : https://www.galette.eu
-* Documentation officielle utilisateur : https://yunohost.org/apps
 * Documentation officielle de l'admin : https://doc.galette.eu/fr/master/
 * Dépôt de code officiel de l'app : https://github.com/galette/galette
 * Documentation YunoHost pour cette app : https://yunohost.org/app_galette
