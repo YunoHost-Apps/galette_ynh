@@ -13,7 +13,6 @@
         "website": "https://www.galette.eu",
         "demo": "https://demo.galette.eu/login",
         "admindoc": "https://doc.galette.eu/fr/master/",
-        "userdoc": "https://yunohost.org/apps",
         "code": "https://github.com/galette/galette"
     },
     "license": "GPL-3.0-or-later",
