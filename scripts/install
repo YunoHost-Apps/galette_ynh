@@ -24,6 +24,7 @@ domain=$YNH_APP_ARG_DOMAIN
 path_url=$YNH_APP_ARG_PATH
 is_public=$YNH_APP_ARG_IS_PUBLIC
 timezone="$(cat /etc/timezone)"
+phpversion=$YNH_PHP_VERSION
 
 app=$YNH_APP_INSTANCE_NAME
 
@@ -45,6 +46,7 @@ ynh_script_progression --message="Storing installation settings..." --weight=1
 
 ynh_app_setting_set --app=$app --key=domain --value=$domain
 ynh_app_setting_set --app=$app --key=path --value=$path_url
+ynh_app_setting_set --app=$app --key=phpversion --value=$phpversion
 
 #=================================================
 # INSTALL DEPENDENCIES
@@ -98,7 +100,6 @@ ynh_add_nginx_config
 ynh_script_progression --message="Configuring PHP-FPM..." --weight=2
 
 ynh_add_fpm_config
-phpversion=$(ynh_app_setting_get --app=$app --key=phpversion)
 
 #=================================================
 # CONFIGURE GALETTE
@@ -106,6 +107,9 @@ phpversion=$(ynh_app_setting_get --app=$app --key=phpversion)
 ynh_script_progression --message="Configuring Galette..." --weight=1
 
 ynh_add_config --template="../conf/config.inc.php.dist" --destination="$final_path/galette/config/config.inc.php"
+
+chmod 400 "$final_path/galette/config/config.inc.php"
+chown $app:$app "$final_path/galette/config/config.inc.php"
 
 #=================================================
 # GENERIC FINALIZATION
