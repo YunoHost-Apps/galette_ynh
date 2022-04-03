@@ -108,8 +108,8 @@ ynh_script_progression --message="Configuring Galette..." --weight=1
 
 ynh_add_config --template="../conf/config.inc.php.dist" --destination="$final_path/galette/config/config.inc.php"
 
-chmod 400 "$final_path/galette/config/config.inc.php"
-chown $app:$app "$final_path/galette/config/config.inc.php"
+#chmod 650 "$final_path/galette/config/config.inc.php"
+#chown $app: "$final_path/galette/config/config.inc.php"
 
 #=================================================
 # GENERIC FINALIZATION
