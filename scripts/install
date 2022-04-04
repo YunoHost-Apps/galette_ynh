@@ -46,7 +46,6 @@ ynh_script_progression --message="Storing installation settings..." --weight=1
 
 ynh_app_setting_set --app=$app --key=domain --value=$domain
 ynh_app_setting_set --app=$app --key=path --value=$path_url
-ynh_app_setting_set --app=$app --key=phpversion --value=$phpversion
 
 #=================================================
 # INSTALL DEPENDENCIES
@@ -61,9 +60,10 @@ ynh_exec_warn_less ynh_install_app_dependencies $pkg_dependencies
 ynh_script_progression --message="Creating a PostgreSQL database..." --weight=2
 
 db_name=$(ynh_sanitize_dbid --db_name=$app)
+db_user=$db_name
 ynh_app_setting_set --app=$app --key=db_name --value=$db_name
 ynh_psql_test_if_first_run
-ynh_psql_setup_db --db_user=$db_name --db_name=$db_name
+ynh_psql_setup_db --db_user=$db_user --db_name=$db_name
 
 #=================================================
 # CREATE DEDICATED USER
@@ -100,6 +100,7 @@ ynh_add_nginx_config
 ynh_script_progression --message="Configuring PHP-FPM..." --weight=2
 
 ynh_add_fpm_config
+ynh_app_setting_set --app=$app --key=phpversion --value=$phpversion
 
 #=================================================
 # CONFIGURE GALETTE
@@ -108,8 +109,8 @@ ynh_script_progression --message="Configuring Galette..." --weight=1
 
 ynh_add_config --template="../conf/config.inc.php.dist" --destination="$final_path/galette/config/config.inc.php"
 
-#chmod 650 "$final_path/galette/config/config.inc.php"
-#chown $app: "$final_path/galette/config/config.inc.php"
+chmod 650 "$final_path/galette/config/config.inc.php"
+chown $app: "$final_path/galette/config/config.inc.php"
 
 #=================================================
 # GENERIC FINALIZATION
@@ -117,14 +118,14 @@ ynh_add_config --template="../conf/config.inc.php.dist" --destination="$final_pa
 # SECURE FILES AND DIRECTORIES
 #=================================================
 
-chown $app  $final_path/galette/config
-chmod g+rwx $final_path/galette/config
+# chown $app  $final_path/galette/config
+# chmod g+rwx $final_path/galette/config
 
-for folder in attachments cache exports files imports logs photos templates_c tempimages
-do
-   chown $app  $final_path/galette/data/$folder
-   chmod g+rwx $final_path/galette/data/$folder
-done
+# for folder in attachments cache exports files imports logs photos templates_c tempimages
+# do
+#    chown $app  $final_path/galette/data/$folder
+#    chmod g+rwx $final_path/galette/data/$folder
+# done
 
 #=================================================
 # SETUP LOGROTATE
@@ -164,7 +165,7 @@ Database information you'll need:
 Type:		pgsql
 Host:		localhost
 Port:		5432
-User:		"$db_name"
+User:		"$db_user"
 Password:	"$db_pwd"
 Name:		"$db_name"
 

@@ -51,19 +51,17 @@ ynh_backup --src_path="/etc/nginx/conf.d/$domain.d/$app.conf"
 ynh_backup --src_path="/etc/php/$phpversion/fpm/pool.d/$app.conf"
 
 #=================================================
+# BACKUP LOGROTATE
+#=================================================
+
+ynh_backup --src_path="/etc/logrotate.d/$app"
+
+#=================================================
 # BACKUP THE POSTGRESQL DATABASE
 #=================================================
 ynh_print_info --message="Backing up the PostgreSQL database..."
 
 ynh_psql_dump_db --database="$db_name" > db.sql
-
-#=================================================
-# SPECIFIC BACKUP
-#=================================================
-# BACKUP LOGROTATE
-#=================================================
-
-ynh_backup --src_path="/etc/logrotate.d/$app"
 
 #=================================================
 # END OF SCRIPT
