@@ -10,6 +10,10 @@ YNH_PHP_VERSION="7.3"
 pkg_dependencies="postgresql php${YNH_PHP_VERSION}-tidy php${YNH_PHP_VERSION}-intl php${YNH_PHP_VERSION}-mbstring php${YNH_PHP_VERSION}-pgsql php${YNH_PHP_VERSION}-xml php${YNH_PHP_VERSION}-gd php${YNH_PHP_VERSION}-curl"
 
 #=================================================
+# PERSONAL HELPERS
+#=================================================
+
+#=================================================
 # EXPERIMENTAL HELPERS
 #=================================================
 
@@ -61,3 +65,7 @@ $(yunohost tools diagnosis | grep -B 100 "services:" | sed '/services:/d')"
 	# Send the email to the recipients
 	echo "$mail_message" | mail -a "Content-Type: text/plain; charset=UTF-8" -s "$mail_subject" "$recipients"
 }
+
+#=================================================
+# FUTURE OFFICIAL HELPERS
+#=================================================
