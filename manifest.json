@@ -48,6 +48,15 @@
                     "fr": "Si cette case est cochée, Galette sera accessible aux personnes n’ayant pas de compte. Vous pourrez changer ceci plus tard via la webadmin."
             },
                 "default": true
+            },
+            {
+                "name": "database",
+                "type": "string",
+                "ask": {
+                    "en": "Choose SQL databe you want"
+                },
+                "choices": ["pgsql", "mysql"],
+                "default": "pgsql"
             }
         ]
     }

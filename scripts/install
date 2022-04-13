@@ -23,6 +23,7 @@ ynh_abort_if_errors
 domain=$YNH_APP_ARG_DOMAIN
 path_url=$YNH_APP_ARG_PATH
 is_public=$YNH_APP_ARG_IS_PUBLIC
+database=$YNH_APP_ARG_DATABASE
 timezone="$(cat /etc/timezone)"
 
 app=$YNH_APP_INSTANCE_NAME
@@ -45,23 +46,19 @@ ynh_script_progression --message="Storing installation settings..." --weight=1
 
 ynh_app_setting_set --app=$app --key=domain --value=$domain
 ynh_app_setting_set --app=$app --key=path --value=$path_url
+ynh_app_setting_set --app=$app --key=database --value=$database
 
 #=================================================
 # INSTALL DEPENDENCIES
 #=================================================
 ynh_script_progression --message="Installing dependencies..." --weight=20
 
+if [ $database == "pgsql" ]
+then
+	pkg_dependencies="$pkg_dependencies pgsql_pkg_dependencies"
+fi
+
 ynh_exec_warn_less ynh_install_app_dependencies $pkg_dependencies
-
-#=================================================
-# CREATE A POSTGRESQL DATABASE
-#=================================================
-ynh_script_progression --message="Creating a PostgreSQL database..." --weight=2
-
-db_name=$(ynh_sanitize_dbid --db_name=$app)
-ynh_app_setting_set --app=$app --key=db_name --value=$db_name
-ynh_psql_test_if_first_run
-ynh_psql_setup_db --db_user=$db_name --db_name=$db_name
 
 #=================================================
 # CREATE DEDICATED USER
@@ -70,6 +67,22 @@ ynh_script_progression --message="Configuring system user..." --weight=1
 
 # Create a system user
 ynh_system_user_create --username=$app --home_dir="$final_path"
+
+#=================================================
+# CREATE A POSTGRESQL DATABASE
+#=================================================
+ynh_script_progression --message="Creating a PostgreSQL database..." --weight=2
+
+db_name=$(ynh_sanitize_dbid --db_name=$app)
+db_user=$db_name
+ynh_app_setting_set --app=$app --key=db_name --value=$db_name
+if [ $database == "pgsql" ]
+then
+	ynh_psql_test_if_first_run
+	ynh_psql_setup_db --db_user=$db_user --db_name=$db_name
+else
+	ynh_mysql_setup_db --db_user=$db_user --db_name=$db_name
+fi
 
 #=================================================
 # DOWNLOAD, CHECK AND UNPACK SOURCE
@@ -105,7 +118,7 @@ phpversion=$(ynh_app_setting_get --app=$app --key=phpversion)
 #=================================================
 ynh_script_progression --message="Configuring Galette..." --weight=1
 
-ynh_add_config --template="../conf/config.inc.php.dist" --destination="$final_path/galette/config/config.inc.php"
+ynh_add_config --template="../conf/config.inc.php.$database" --destination="$final_path/galette/config/config.inc.php"
 
 #=================================================
 # GENERIC FINALIZATION
