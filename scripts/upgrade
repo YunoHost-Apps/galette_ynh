@@ -21,6 +21,7 @@ path_url=$(ynh_app_setting_get --app=$app --key=path)
 final_path=$(ynh_app_setting_get --app=$app --key=final_path)
 db_name=$(ynh_app_setting_get --app=$app --key=db_name)
 db_user=$db_name
+db_pwd=$(ynh_app_setting_get --app=$app --key=db_pwd)
 phpversion=$(ynh_app_setting_get --app=$app --key=phpversion)
 database=$(ynh_app_setting_get --app=$app --key=database)
 timezone="$(cat /etc/timezone)"
@@ -59,10 +60,10 @@ if [ -z "$db_name" ]; then
 	ynh_app_setting_set --app=$app --key=db_name --value=$db_name
 fi
 
-# If db_name doesn't exist, create it
+# If db_pwd doesn't exist, create it
 if [ -z "$db_pwd" ]; then
 	db_pwd=$(ynh_app_setting_get --app=$app --key=psqlpwd)
-	ynh_app_setting_set --app=$app --key=psqlpwd --value=$db_pwd
+	ynh_app_setting_set --app=$app --key=db_pwd --value=$db_pwd
 fi
 
 # If final_path doesn't exist, create it
