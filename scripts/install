@@ -23,6 +23,8 @@ ynh_abort_if_errors
 domain=$YNH_APP_ARG_DOMAIN
 path_url=$YNH_APP_ARG_PATH
 is_public=$YNH_APP_ARG_IS_PUBLIC
+admin=$YNH_APP_ARG_ADMIN
+password=$YNH_APP_ARG_PASSWORD
 
 app=$YNH_APP_INSTANCE_NAME
 
@@ -118,6 +120,29 @@ chmod 400 "$final_path/galette/config/config.inc.php"
 chown $app:$app "$final_path/galette/config/config.inc.php"
 
 #=================================================
+# SETUP APPLICATION WITH CURL
+#=================================================
+ynh_script_progression --message="Setuping application with CURL..."
+
+# Set the app as temporarily public for curl call
+ynh_script_progression --message="Configuring SSOwat..."
+# Making the app public for curl
+ynh_permission_update --permission="main" --add="visitors"
+
+# Installation with curl
+ynh_script_progression --message="Finalizing installation..."
+ynh_local_curl "/installer.php" "install_permsok=1"
+ynh_local_curl "/installer.php"  "install_type=i"
+ynh_local_curl "/installer.php"  "install_dbtype=pgsql" "install_dbhost=localhost" "install_dbport=5432" "install_dbuser=$db_user" "install_dbpass=$db_pwd" "install_dbname=$db_name" "install_dbprefix=galette_"
+ynh_local_curl "/installer.php"  "install_dbperms_ok=1"
+ynh_local_curl "/installer.php"  "install_dbwrite_ok=1"
+ynh_local_curl "/installer.php"  "install_adminlogin=$admin" "install_adminpass=$password" "install_adminpass_verif=$password"
+ynh_local_curl "/installer.php"  "install_prefs_ok=1"
+
+# Remove the public access
+ynh_permission_update --permission="main" --remove="visitors"
+
+#=================================================
 # SECURE FILES AND DIRECTORIES
 #=================================================
 
@@ -159,30 +184,6 @@ fi
 ynh_script_progression --message="Reloading NGINX web server..." --weight=2
 
 ynh_systemd_action --service_name=nginx --action=reload
-
-#=================================================
-# SEND A README FOR THE ADMIN
-#=================================================
-
-message="Galette need you to finish the installation manually.
-
-Please open "https://$domain/$path_url/installer.php" and finish the install process.
-
-Database information you'll need:
-Type:		pgsql
-Host:		localhost
-Port:		5432
-User:		"$db_user"
-Password:	"$db_pwd"
-Name:		"$db_name"
-
-Important! Once done, please remember to run as root or with sudo:
-Restrict the rights of the config file \`chmod -R 500 "$final_path/galette/config"\`
-\`Remove the install file "$final_path/galette/install"\`
-
-If you facing an issue or want to improve this app, please open a new issue in this project: https://github.com/YunoHost-Apps/galette_ynh"
-
-ynh_send_readme_to_admin "$message"
 
 #=================================================
 # END OF SCRIPT
