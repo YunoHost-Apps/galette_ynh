@@ -28,6 +28,7 @@ timezone="$(cat /etc/timezone)"
 #=================================================
 # CHECK VERSION
 #=================================================
+ynh_script_progression --message="Checking version..."
 
 upgrade_type=$(ynh_check_app_version_changed)
 
@@ -45,6 +46,8 @@ ynh_clean_setup () {
 # Exit if an error occurs during the execution of the script
 ynh_abort_if_errors
 
+#=================================================
+# STANDARD UPGRADE STEPS
 #=================================================
 # ENSURE DOWNWARD COMPATIBILITY
 #=================================================
@@ -84,13 +87,13 @@ ynh_script_progression --message="Making sure dedicated system user exists..." -
 ynh_system_user_create --username=$app --home_dir="$final_path"
 
 #=================================================
-# STANDARD UPGRADE STEPS
-#=================================================
 # DOWNLOAD, CHECK AND UNPACK SOURCE
 #=================================================
 
 if [ "$upgrade_type" == "UPGRADE_APP" ]
 then
+	ynh_script_progression --message="Upgrading source files..."
+
 	# Download, check integrity, uncompress and patch the source from app.src
 	mv "$final_path" "$final_path.old"
 
@@ -107,9 +110,9 @@ then
 	ynh_secure_remove "$final_path.old"
 fi
 
-chmod 750 $final_path
-chmod -R o-rwx $final_path
-chown -R $app:www-data $final_path
+chmod 750 "$final_path"
+chmod -R o-rwx "$final_path"
+chown -R $app:www-data "$final_path"
 
 #=================================================
 # NGINX CONFIGURATION
@@ -137,16 +140,6 @@ ynh_add_fpm_config
 #=================================================
 # SPECIFIC UPGRADE
 #=================================================
-# SETUP LOGROTATE
-#=================================================
-ynh_script_progression --message="Upgrading logrotate configuration..." --weight=1
-
-# Use logrotate to manage app-specific logfile(s)
-ynh_use_logrotate --non-append
-
-#=================================================
-# GENERIC FINALIZATION
-#=================================================
 # SECURE FILES AND DIRECTORIES
 #=================================================
 
@@ -161,6 +154,14 @@ done
 
 #=================================================
 # GENERIC FINALIZATION
+#=================================================
+# SETUP LOGROTATE
+#=================================================
+ynh_script_progression --message="Upgrading logrotate configuration..." --weight=1
+
+# Use logrotate to manage app-specific logfile(s)
+ynh_use_logrotate --non-append
+
 #=================================================
 # RELOAD NGINX
 #=================================================
