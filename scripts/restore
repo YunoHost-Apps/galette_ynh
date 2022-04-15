@@ -29,8 +29,8 @@ path_url=$(ynh_app_setting_get --app=$app --key=path)
 final_path=$(ynh_app_setting_get --app=$app --key=final_path)
 db_name=$(ynh_app_setting_get --app=$app --key=db_name)
 db_user=$db_name
-db_pwd=$(ynh_app_setting_get --app=$app --key=psqlpwd)
 phpversion=$(ynh_app_setting_get --app=$app --key=phpversion)
+database=$(ynh_app_setting_get --app=$app --key=database)
 timezone="$(cat /etc/timezone)"
 
 #=================================================
@@ -84,6 +84,11 @@ phpversion=$(ynh_app_setting_get --app=$app --key=phpversion)
 ynh_script_progression --message="Reinstalling dependencies..." --weight=6
 
 # Define and install dependencies
+if [ $database == "pgsql" ]
+then
+	pkg_dependencies="$pkg_dependencies $pgsql_pkg_dependencies"
+fi
+
 ynh_exec_warn_less ynh_install_app_dependencies $pkg_dependencies
 
 #=================================================
@@ -91,9 +96,17 @@ ynh_exec_warn_less ynh_install_app_dependencies $pkg_dependencies
 #=================================================
 ynh_script_progression --message="Restoring the PostgreSQL database..." --weight=6
 
-ynh_psql_test_if_first_run
-ynh_psql_setup_db --db_user=$db_user --db_name=$db_name --db_pwd=$db_pwd
-ynh_psql_execute_file_as_root --file="./db.sql" --database=$db_name
+if [ $database == "pgsql" ]
+then
+	db_pwd=$(ynh_app_setting_get --app=$app --key=psqlpwd)
+	ynh_psql_test_if_first_run
+	ynh_psql_setup_db --db_user=$db_user --db_name=$db_name --db_pwd=$db_pwd
+	ynh_psql_execute_file_as_root --file="./db.sql" --database=$db_name
+else
+	db_pwd=$(ynh_app_setting_get --app=$app --key=mysqlpwd)
+	ynh_mysql_setup_db --db_user=$db_user --db_name=$db_name --db_pwd=$db_pwd
+	ynh_mysql_connect_as --user=$db_user --password=$db_pwd --database=$db_name < ./db.sql
+fi
 
 #=================================================
 # RESTORE USER RIGHTS

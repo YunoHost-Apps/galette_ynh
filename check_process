@@ -5,6 +5,7 @@
 		is_public=1
 		admin="john"
 		password="1Strong-Password"
+		database="pgsql"
 	; Checks
 		pkg_linter=1
 		setup_sub_dir=1
