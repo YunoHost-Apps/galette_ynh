@@ -21,22 +21,31 @@ port=$(ynh_app_setting_get --app=$app --key=port)
 db_name=$(ynh_app_setting_get --app=$app --key=db_name)
 db_user=$db_name
 final_path=$(ynh_app_setting_get --app=$app --key=final_path)
+database=$(ynh_app_setting_get --app=$app --key=database)
 
 #=================================================
-# REMOVE THE POSTGRESQL DATABASE
+# STANDARD REMOVE
 #=================================================
-ynh_script_progression --message="Removing the PostgreSQL database..." --weight=2
+# REMOVE LOGROTATE CONFIGURATION
+#=================================================
+ynh_script_progression --message="Removing logrotate configuration..."
+
+# Remove the app-specific logrotate config
+ynh_remove_logrotate
+
+#=================================================
+# REMOVE THE SQL DATABASE
+#=================================================
 
 # Remove a database if it exists, along with the associated user
-ynh_psql_remove_db --db_user=$db_user --db_name=$db_name
-
-#=================================================
-# REMOVE DEPENDENCIES
-#=================================================
-ynh_script_progression --message="Removing dependencies..." --weight=1
-
-# Remove metapackage and its dependencies
-ynh_remove_app_dependencies
+if [ $database == "pgsql" ]
+then
+	ynh_script_progression --message="Removing the PostgreSQL database..." --weight=2
+	ynh_psql_remove_db --db_user=$db_user --db_name=$db_name
+else
+	ynh_script_progression --message="Removing the MySQL database..." --weight=2
+	ynh_mysql_remove_db --db_user=$db_user --db_name=$db_name
+fi
 
 #=================================================
 # REMOVE APP MAIN DIR
@@ -63,11 +72,12 @@ ynh_script_progression --message="Removing PHP-FPM configuration..." --weight=3
 ynh_remove_fpm_config
 
 #=================================================
-# REMOVE LOGROTATE CONFIGURATION
+# REMOVE DEPENDENCIES
 #=================================================
+ynh_script_progression --message="Removing dependencies..." --weight=1
 
-# Remove the app-specific logrotate config
-ynh_remove_logrotate
+# Remove metapackage and its dependencies
+ynh_remove_app_dependencies
 
 #=================================================
 # GENERIC FINALIZATION
