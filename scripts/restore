@@ -92,17 +92,18 @@ fi
 ynh_exec_warn_less ynh_install_app_dependencies $pkg_dependencies
 
 #=================================================
-# RESTORE THE POSTGRESQL DATABASE
+# RESTORE THE SQL DATABASE
 #=================================================
-ynh_script_progression --message="Restoring the PostgreSQL database..." --weight=6
 
 if [ $database == "pgsql" ]
 then
+	ynh_script_progression --message="Restoring the PostgreSQL database..." --weight=6
 	db_pwd=$(ynh_app_setting_get --app=$app --key=psqlpwd)
 	ynh_psql_test_if_first_run
 	ynh_psql_setup_db --db_user=$db_user --db_name=$db_name --db_pwd=$db_pwd
 	ynh_psql_execute_file_as_root --file="./db.sql" --database=$db_name
 else
+	ynh_script_progression --message="Restoring the MySQL database..." --weight=6
 	db_pwd=$(ynh_app_setting_get --app=$app --key=mysqlpwd)
 	ynh_mysql_setup_db --db_user=$db_user --db_name=$db_name --db_pwd=$db_pwd
 	ynh_mysql_connect_as --user=$db_user --password=$db_pwd --database=$db_name < ./db.sql

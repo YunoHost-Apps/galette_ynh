@@ -34,15 +34,16 @@ ynh_script_progression --message="Removing logrotate configuration..."
 ynh_remove_logrotate
 
 #=================================================
-# REMOVE THE POSTGRESQL DATABASE
+# REMOVE THE SQL DATABASE
 #=================================================
-ynh_script_progression --message="Removing the PostgreSQL database..." --weight=2
 
 # Remove a database if it exists, along with the associated user
 if [ $database == "pgsql" ]
 then
+	ynh_script_progression --message="Removing the PostgreSQL database..." --weight=2
 	ynh_psql_remove_db --db_user=$db_user --db_name=$db_name
 else
+	ynh_script_progression --message="Removing the MySQL database..." --weight=2
 	ynh_mysql_remove_db --db_user=$db_user --db_name=$db_name
 fi
 
