@@ -8,13 +8,13 @@ $Id$
 */
 
 /* choose your database engine, values : pgsql|mysql */
-define("TYPE_DB", "pgsql"); 
+define("TYPE_DB", "mysql"); 
 /* hostname for the database */
 define("HOST_DB", "localhost"); 
 /* tcp port for the database */
-define("PORT_DB", "5432"); 
+define("PORT_DB", "3306"); 
 /* the username for the database */
-define("USER_DB", "__DB_NAME__");
+define("USER_DB", "__DB_USER__");
 /* password for the username define above */
 define("PWD_DB", "__DB_PWD__");
 /* the database name */
