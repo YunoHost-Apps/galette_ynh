@@ -1,1 +1,1 @@
-Outil de gestion d'adhérents et de cotisation en ligne pour associations
+Outil de gestion d'adhÃ©rents et de cotisation en ligne pour associations
