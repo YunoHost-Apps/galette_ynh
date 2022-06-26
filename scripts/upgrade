@@ -54,6 +54,13 @@ ynh_abort_if_errors
 #=================================================
 ynh_script_progression --message="Ensuring downward compatibility..." --weight=2
 
+# Cleaning legacy permissions
+if ynh_legacy_permissions_exists; then
+	ynh_legacy_permissions_delete_all
+
+	ynh_app_setting_delete --app=$app --key=is_public
+fi
+
 # If db_name doesn't exist, create it
 if [ -z "$db_name" ]; then
 	db_name=$(ynh_sanitize_dbid "$app")
@@ -72,11 +79,10 @@ if [ -z "$final_path" ]; then
 	ynh_app_setting_set --app=$app --key=final_path --value=$final_path
 fi
 
-# Cleaning legacy permissions
-if ynh_legacy_permissions_exists; then
-	ynh_legacy_permissions_delete_all
-
-	ynh_app_setting_delete --app=$app --key=is_public
+# If database doesn't exist, create it
+if [ -z "$database" ]; then
+	database="pgsql"
+	ynh_app_setting_set --app=$app --key=database --value=$database
 fi
 
 #=================================================
@@ -98,13 +104,13 @@ then
 	# Download, check integrity, uncompress and patch the source from app.src
 	mv "$final_path" "$final_path.old"
 
-	ynh_setup_source "$final_path"
-	#ynh_secure_remove "$final_path"/tests
+	ynh_setup_source --dest_dir="$final_path"
 
 	# when running automatic tests, there is no config.inc.php
 	if [ -e "$final_path.old/galette/config/config.inc.php" ]; then
 	    cp "$final_path.old/galette/config/config.inc.php" "$final_path/galette/config/config.inc.php"
 	    cp -r "$final_path.old/galette/data" "$final_path/galette/data"
+	    cp -r "$final_path.old/galette/plugins" "$final_path/galette/plugins"
 	fi
 
 	# delete temp directory
@@ -114,14 +120,6 @@ fi
 chmod 750 "$final_path"
 chmod -R o-rwx "$final_path"
 chown -R $app:www-data "$final_path"
-
-#=================================================
-# NGINX CONFIGURATION
-#=================================================
-ynh_script_progression --message="Upgrading NGINX web server configuration..." --weight=2
-
-# Create a dedicated NGINX config
-ynh_add_nginx_config
 
 #=================================================
 # UPGRADE DEPENDENCIES
@@ -142,6 +140,14 @@ ynh_script_progression --message="Upgrading PHP-FPM configuration..." --weight=2
 
 # Create a dedicated PHP-FPM config
 ynh_add_fpm_config
+
+#=================================================
+# NGINX CONFIGURATION
+#=================================================
+ynh_script_progression --message="Upgrading NGINX web server configuration..." --weight=2
+
+# Create a dedicated NGINX config
+ynh_add_nginx_config
 
 #=================================================
 # SPECIFIC UPGRADE
