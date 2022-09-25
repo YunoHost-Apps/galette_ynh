@@ -6,14 +6,15 @@
         "en": "Membership management web application for non profit organizations",
         "fr": "Outil de gestion d'adhérents et de cotisation en ligne pour associations"
     },
-    "version": "0.9.5.2~ynh3",
+    "version": "0.9.6.1~ynh1",
     "url": "https://www.galette.eu",
     "upstream": {
         "license": "GPL-3.0-or-later",
         "website": "https://www.galette.eu",
         "demo": "https://demo.galette.eu/login",
         "admindoc": "https://doc.galette.eu/fr/master/",
-        "code": "https://github.com/galette/galette"
+        "code": "https://github.com/galette/galette",
+        "cpe": "cpe:2.3:a:galette:galette"
     },
     "license": "GPL-3.0-or-later",
     "maintainer": {
@@ -26,7 +27,7 @@
     "multi_instance": true,
     "services": [
         "nginx",
-        "php7.3-fpm"
+        "php7.4-fpm"
     ],
     "arguments": {
         "install": [
@@ -63,7 +64,10 @@
                 "ask": {
                     "en": "Choose SQL databe you want"
                 },
-                "choices": ["pgsql", "mysql"],
+                "choices": [
+                    "pgsql",
+                    "mysql"
+                ],
                 "default": "pgsql"
             }
         ]
