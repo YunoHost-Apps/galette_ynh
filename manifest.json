@@ -13,7 +13,8 @@
         "website": "https://www.galette.eu",
         "demo": "https://demo.galette.eu/login",
         "admindoc": "https://doc.galette.eu/fr/master/",
-        "code": "https://github.com/galette/galette"
+        "code": "https://github.com/galette/galette",
+        "cpe": "cpe:2.3:a:galette:galette"
     },
     "license": "GPL-3.0-or-later",
     "maintainer": {
@@ -63,7 +64,10 @@
                 "ask": {
                     "en": "Choose SQL databe you want"
                 },
-                "choices": ["pgsql", "mysql"],
+                "choices": [
+                    "pgsql",
+                    "mysql"
+                ],
                 "default": "pgsql"
             }
         ]
