@@ -20,6 +20,7 @@ Galette is a membership management web application towards non profit organizati
 
 **Shipped version:** 0.9.5.2~ynh3
 
+
 **Demo:** https://demo.galette.eu/login
 
 ## Screenshots
