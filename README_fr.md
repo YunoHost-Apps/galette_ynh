@@ -5,33 +5,33 @@ It shall NOT be edited by hand.
 
 # Galette pour YunoHost
 
-[![Niveau d'intégration](https://dash.yunohost.org/integration/galette.svg)](https://dash.yunohost.org/appci/app/galette) ![Statut du fonctionnement](https://ci-apps.yunohost.org/ci/badges/galette.status.svg) ![Statut de maintenance](https://ci-apps.yunohost.org/ci/badges/galette.maintain.svg)  
+[![Niveau d’intégration](https://dash.yunohost.org/integration/galette.svg)](https://dash.yunohost.org/appci/app/galette) ![Statut du fonctionnement](https://ci-apps.yunohost.org/ci/badges/galette.status.svg) ![Statut de maintenance](https://ci-apps.yunohost.org/ci/badges/galette.maintain.svg)
+
 [![Installer Galette avec YunoHost](https://install-app.yunohost.org/install-with-yunohost.svg)](https://install-app.yunohost.org/?app=galette)
 
 *[Read this readme in english.](./README.md)*
 
-> *Ce package vous permet d'installer Galette rapidement et simplement sur un serveur YunoHost.
-Si vous n'avez pas YunoHost, regardez [ici](https://yunohost.org/#/install) pour savoir comment l'installer et en profiter.*
+> *Ce package vous permet d’installer Galette rapidement et simplement sur un serveur YunoHost.
+Si vous n’avez pas YunoHost, regardez [ici](https://yunohost.org/#/install) pour savoir comment l’installer et en profiter.*
 
-## Vue d'ensemble
+## Vue d’ensemble
 
 Outil de gestion d'adhérents et de cotisation en ligne pour associations
 
 
-**Version incluse :** 0.9.6.1~ynh1
-
+**Version incluse :** 0.9.6.1~ynh1
 
 **Démo :** https://demo.galette.eu/login
 
-## Captures d'écran
+## Captures d’écran
 
-![Capture d'écran de Galette](./doc/screenshots/edit_member.png)
+![Capture d’écran de Galette](./doc/screenshots/edit_member.png)
 
 ## Documentations et ressources
 
-* Site officiel de l'app : <https://www.galette.eu>
-* Documentation officielle de l'admin : <https://doc.galette.eu/fr/master/>
-* Dépôt de code officiel de l'app : <https://github.com/galette/galette>
+* Site officiel de l’app : <https://www.galette.eu>
+* Documentation officielle de l’admin : <https://doc.galette.eu/fr/master/>
+* Dépôt de code officiel de l’app : <https://github.com/galette/galette>
 * Documentation YunoHost pour cette app : <https://yunohost.org/app_galette>
 * Signaler un bug : <https://github.com/YunoHost-Apps/galette_ynh/issues>
 
@@ -47,4 +47,4 @@ ou
 sudo yunohost app upgrade galette -u https://github.com/YunoHost-Apps/galette_ynh/tree/testing --debug
 ```
 
-**Plus d'infos sur le packaging d'applications :** <https://yunohost.org/packaging_apps>
+**Plus d’infos sur le packaging d’applications :** <https://yunohost.org/packaging_apps>
