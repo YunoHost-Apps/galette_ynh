@@ -32,7 +32,7 @@ Outil de gestion d'adhérents et de cotisation en ligne pour associations
 * Site officiel de l’app : <https://www.galette.eu>
 * Documentation officielle de l’admin : <https://doc.galette.eu/fr/master/>
 * Dépôt de code officiel de l’app : <https://github.com/galette/galette>
-* Documentation YunoHost pour cette app : <https://yunohost.org/app_galette>
+* YunoHost Store: <https://apps.yunohost.org/app/galette>
 * Signaler un bug : <https://github.com/YunoHost-Apps/galette_ynh/issues>
 
 ## Informations pour les développeurs

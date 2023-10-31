@@ -32,7 +32,7 @@ Galette is a membership management web application towards non profit organizati
 * Official app website: <https://www.galette.eu>
 * Official admin documentation: <https://doc.galette.eu/fr/master/>
 * Upstream app code repository: <https://github.com/galette/galette>
-* YunoHost documentation for this app: <https://yunohost.org/app_galette>
+* YunoHost Store: <https://apps.yunohost.org/app/galette>
 * Report a bug: <https://github.com/YunoHost-Apps/galette_ynh/issues>
 
 ## Developer info
