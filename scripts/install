@@ -10,68 +10,10 @@ source _common.sh
 source /usr/share/yunohost/helpers
 
 #=================================================
-# MANAGE SCRIPT FAILURE
-#=================================================
-
-# Exit if an error occurs during the execution of the script
-ynh_abort_if_errors
-
-#=================================================
 # RETRIEVE ARGUMENTS FROM THE MANIFEST
 #=================================================
 
-domain=$YNH_APP_ARG_DOMAIN
-path_url=$YNH_APP_ARG_PATH
-is_public=$YNH_APP_ARG_IS_PUBLIC
-admin=$YNH_APP_ARG_ADMIN
-password=$YNH_APP_ARG_PASSWORD
-database=$YNH_APP_ARG_DATABASE
-
-app=$YNH_APP_INSTANCE_NAME
-
 timezone="$(cat /etc/timezone)"
-
-#=================================================
-# CHECK IF THE APP CAN BE INSTALLED WITH THESE ARGS
-#=================================================
-ynh_script_progression --message="Validating installation parameters..." --weight=1
-
-final_path=/var/www/$app
-test ! -e "$final_path" || ynh_die --message="This path already contains a folder"
-
-# Register (book) web path
-ynh_webpath_register --app=$app --domain=$domain --path_url=$path_url
-
-#=================================================
-# STORE SETTINGS FROM MANIFEST
-#=================================================
-ynh_script_progression --message="Storing installation settings..." --weight=1
-
-ynh_app_setting_set --app=$app --key=domain --value=$domain
-ynh_app_setting_set --app=$app --key=path --value=$path_url
-ynh_app_setting_set --app=$app --key=database --value=$database
-
-#=================================================
-# STANDARD MODIFICATIONS
-#=================================================
-# INSTALL DEPENDENCIES
-#=================================================
-ynh_script_progression --message="Installing dependencies..." --weight=20
-
-if [ $database == "pgsql" ]
-then
-	pkg_dependencies="$pkg_dependencies $pgsql_pkg_dependencies"
-fi
-
-ynh_exec_warn_less ynh_install_app_dependencies $pkg_dependencies
-
-#=================================================
-# CREATE DEDICATED USER
-#=================================================
-ynh_script_progression --message="Configuring system user..." --weight=1
-
-# Create a system user
-ynh_system_user_create --username=$app --home_dir="$final_path"
 
 #=================================================
 # CREATE A SQL DATABASE
@@ -79,8 +21,12 @@ ynh_system_user_create --username=$app --home_dir="$final_path"
 
 db_name=$(ynh_sanitize_dbid --db_name=$app)
 db_user=$db_name
+db_pwd=$(ynh_string_random --length=30)
 ynh_app_setting_set --app=$app --key=db_name --value=$db_name
-if [ $database == "pgsql" ]
+ynh_app_setting_set --app=$app --key=db_user --value=$db_user
+ynh_app_setting_set --app=$app --key=db_pwd --value=$db_pwd
+
+if [ $database == "postgresql" ]
 then
 	ynh_script_progression --message="Creating a PostgreSQL database..." --weight=2
 	ynh_psql_test_if_first_run
@@ -97,30 +43,25 @@ fi
 #=================================================
 ynh_script_progression --message="Setting up source files..." --weight=1
 
-ynh_app_setting_set --app=$app --key=final_path --value=$final_path
 # Download, check integrity, uncompress and patch the source from app.src
-ynh_setup_source --dest_dir="$final_path"
+ynh_setup_source --dest_dir="$install_dir"
 
-chmod 750 "$final_path"
-chmod -R o-rwx "$final_path"
-chown -R $app:www-data "$final_path"
+chmod -R o-rwx "$install_dir"
+chown -R $app:www-data "$install_dir"
 
 #=================================================
-# PHP-FPM CONFIGURATION
+# SYSTEM CONFIGURATION
 #=================================================
-ynh_script_progression --message="Configuring PHP-FPM..." --weight=2
+ynh_script_progression --message="Adding system configurations related to $app..." --weight=1
 
 # Create a dedicated PHP-FPM config
 ynh_add_fpm_config
-phpversion=$(ynh_app_setting_get --app=$app --key=phpversion)
-
-#=================================================
-# NGINX CONFIGURATION
-#=================================================
-ynh_script_progression --message="Configuring NGINX web server..." --weight=1
 
 # Create a dedicated NGINX config
 ynh_add_nginx_config
+
+# Use logrotate to manage application logfile(s)
+ynh_use_logrotate
 
 #=================================================
 # SPECIFIC SETUP
@@ -129,26 +70,21 @@ ynh_add_nginx_config
 #=================================================
 ynh_script_progression --message="Adding a configuration file..." --weight=1
 
-ynh_add_config --template="../conf/config.inc.php.$database" --destination="$final_path/galette/config/config.inc.php"
+ynh_add_config --template="config.inc.php.$database" --destination="$install_dir/galette/config/config.inc.php"
 
-chmod 400 "$final_path/galette/config/config.inc.php"
-chown $app:$app "$final_path/galette/config/config.inc.php"
+chmod 400 "$install_dir/galette/config/config.inc.php"
+chown $app:$app "$install_dir/galette/config/config.inc.php"
 
 #=================================================
 # SETUP APPLICATION WITH CURL
 #=================================================
 ynh_script_progression --message="Setuping application with CURL..."
 
-# Set the app as temporarily public for curl call
-ynh_script_progression --message="Configuring SSOwat..."
-# Making the app public for curl
-ynh_permission_update --permission="main" --add="visitors"
-
 # Installation with curl
 ynh_script_progression --message="Finalizing installation..."
 ynh_local_curl "/installer.php" "install_permsok=1"
 ynh_local_curl "/installer.php"  "install_type=i"
-if [ $database == "pgsql" ]
+if [ $database == "postgresql" ]
 then
 	ynh_local_curl "/installer.php"  "install_dbtype=pgsql" "install_dbhost=localhost" "install_dbport=5432" "install_dbuser=$db_user" "install_dbpass=$db_pwd" "install_dbname=$db_name" "install_dbprefix=galette_"
 else
@@ -159,51 +95,18 @@ ynh_local_curl "/installer.php"  "install_dbwrite_ok=1"
 ynh_local_curl "/installer.php"  "install_adminlogin=$admin" "install_adminpass=$password" "install_adminpass_verif=$password"
 ynh_local_curl "/installer.php"  "install_prefs_ok=1"
 
-# Remove the public access
-ynh_permission_update --permission="main" --remove="visitors"
-
 #=================================================
 # SECURE FILES AND DIRECTORIES
 #=================================================
 
-chown $app  $final_path/galette/config
-chmod g+rwx $final_path/galette/config
+chown $app  $install_dir/galette/config
+chmod g+rwx $install_dir/galette/config
 
 for folder in attachments cache exports files imports logs photos templates_c tempimages
 do
-   chown $app  $final_path/galette/data/$folder
-   chmod g+rwx $final_path/galette/data/$folder
+   chown $app  $install_dir/galette/data/$folder
+   chmod g+rwx $install_dir/galette/data/$folder
 done
-
-#=================================================
-# GENERIC FINALIZATION
-#=================================================
-# SETUP LOGROTATE
-#=================================================
-ynh_script_progression --message="Configuring log rotation..." --weight=1
-
-# Use logrotate to manage application logfile(s)
-ynh_use_logrotate
-
-#=================================================
-# SETUP SSOWAT
-#=================================================
-ynh_script_progression --message="Configuring permissions..." --weight=1
-
-# Make app public if necessary
-if [ $is_public -eq 1 ]
-then
-	# Everyone can access the app.
-	# The "main" permission is automatically created before the install script.
-	ynh_permission_update --permission="main" --add="visitors"
-fi
-
-#=================================================
-# RELOAD NGINX
-#=================================================
-ynh_script_progression --message="Reloading NGINX web server..." --weight=2
-
-ynh_systemd_action --service_name=nginx --action=reload
 
 #=================================================
 # END OF SCRIPT
