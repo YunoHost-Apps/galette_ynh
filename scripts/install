@@ -23,7 +23,7 @@ db_name=$(ynh_sanitize_dbid --db_name=$app)
 db_user=$db_name
 ynh_app_setting_set --app=$app --key=db_name --value=$db_name
 
-if [ $database == "pgsql" ]
+if [ $database == "postgresql" ]
 then
 	ynh_script_progression --message="Creating a PostgreSQL database..." --weight=2
 	ynh_psql_test_if_first_run
@@ -81,7 +81,7 @@ ynh_script_progression --message="Setuping application with CURL..."
 ynh_script_progression --message="Finalizing installation..."
 ynh_local_curl "/installer.php" "install_permsok=1"
 ynh_local_curl "/installer.php"  "install_type=i"
-if [ $database == "pgsql" ]
+if [ $database == "postgresql" ]
 then
 	ynh_local_curl "/installer.php"  "install_dbtype=pgsql" "install_dbhost=localhost" "install_dbport=5432" "install_dbuser=$db_user" "install_dbpass=$db_pwd" "install_dbname=$db_name" "install_dbprefix=galette_"
 else

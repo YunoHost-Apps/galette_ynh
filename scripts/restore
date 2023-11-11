@@ -30,7 +30,7 @@ chown -R $app:www-data "$install_dir"
 # RESTORE THE SQL DATABASE
 #=================================================
 
-if [ $database == "pgsql" ]
+if [ $database == "postgresql" ]
 then
 	ynh_psql_execute_file_as_root --file="./db.sql" --database=$db_name
 else
