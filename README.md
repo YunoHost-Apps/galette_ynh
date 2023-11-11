@@ -18,8 +18,6 @@ If you don't have YunoHost, please consult [the guide](https://yunohost.org/#/in
 
 Galette is a membership management web application towards non profit organizations.
 
-### Features
-
 - Member management
 - Management of contributions and transactions
 - Management of groups and managers
@@ -30,7 +28,7 @@ Galette is a membership management web application towards non profit organizati
 - Plugin support
 
 
-**Shipped version:** 0.9.6.1~ynh1
+**Shipped version:** 1.0.0~ynh1
 
 **Demo:** https://demo.galette.eu/login
 

@@ -5,7 +5,7 @@ name = "Galette"
 description.en = "Membership management web application for non profit organizations"
 description.fr = "Outil de gestion d'adhérents et de cotisation en ligne pour associations"
 
-version = "0.9.6.1~ynh1"
+version = "1.0.0~ynh1"
 
 maintainers = []
 
@@ -56,8 +56,8 @@ ram.runtime = "50M"
 
 [resources]
         [resources.sources.main]
-        url = "https://download.tuxfamily.org/galette/galette-0.9.6.1.tar.bz2"
-        sha256 = "7f3d09af19711372cc35d48352e115ee96e835ea879298347289d274308bb011"
+        url = "https://github.com/galette/galette/releases/download/1.0.0rc2/galette-1.0.0-rc2-20231017-a030a93d5e.tar.bz2"
+        sha256 = "ad3d7aaf46b8a0980ddb9e98fb22db10d0d01b6742f1272b577e573791b16313"
 
     [resources.system_user]
     allow_email = true
@@ -68,13 +68,13 @@ ram.runtime = "50M"
     main.url = "/"
 
     [resources.apt]
-    packages = "php7.4-tidy, php7.4-intl, php7.4-mbstring, php7.4-xml, php7.4-gd, php7.4-curl"
+    packages = "php8.2-tidy, php8.2-intl, php8.2-mbstring, php8.2-xml, php8.2-gd, php8.2-curl"
 
     packages_from_raw_bash = """
     if [[ "$database" == "mysql" ]]; then 
-        echo "mariadb-server, php7.4-mysql"
+        echo "mariadb-server, php8.2-mysql"
             
     elif [[ "$database" == "postgresql" ]]; then
-        echo "postgresql, postgresql-contrib, php7.4-pgsql"
+        echo "postgresql, postgresql-contrib, php8.2-pgsql"
     fi
     """
