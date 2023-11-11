@@ -52,7 +52,7 @@ ram.runtime = "50M"
     ask.fr = "Choisissez la base de données SQL souhaitée"
     type = "select"
     choices = ["postgresql", "mysql"]
-    default = "pgsql"
+    default = "postgresql"
 
 [resources]
         [resources.sources.main]
