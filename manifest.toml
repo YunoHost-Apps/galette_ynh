@@ -20,7 +20,9 @@ code = "https://github.com/galette/galette"
 yunohost = ">= 11.2"
 architectures = "all"
 multi_instance = true
+
 ldap = false
+
 sso = false
 
 disk = "50M"
@@ -49,7 +51,7 @@ ram.runtime = "50M"
     ask.en = "Choose SQL database you want"
     ask.fr = "Choisissez la base de données SQL souhaitée"
     type = "select"
-    choices = ["pgsql", "mysql"]
+    choices = ["postgresql", "mysql"]
     default = "pgsql"
 
 [resources]
