@@ -22,6 +22,7 @@ timezone="$(cat /etc/timezone)"
 db_name=$(ynh_sanitize_dbid --db_name=$app)
 db_user=$db_name
 ynh_app_setting_set --app=$app --key=db_name --value=$db_name
+ynh_app_setting_set --app=$app --key=db_user --value=$db_user
 
 if [ $database == "postgresql" ]
 then
