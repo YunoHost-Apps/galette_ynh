@@ -16,10 +16,22 @@ Si vous n’avez pas YunoHost, regardez [ici](https://yunohost.org/#/install) po
 
 ## Vue d’ensemble
 
-Outil de gestion d'adhérents et de cotisation en ligne pour associations
+Outil de gestion d'adhérents et de cotisation en ligne pour associations.
 
 
-**Version incluse :** 0.9.6.1~ynh1
+### Caractéristiques
+
+- Gestion des adhérents
+- Gestion des cotisations et transactions
+- Gestion de groupes et de responsables
+- Imports et exports (formats ouverts)
+- Accessibilité accrue (utilisation et respect des standards du web)
+- Configuration des fiches et des listes
+- Ajout de champs dynamiques aux fiches adhérents, contributions et transactions
+- Support de plugins
+
+
+**Version incluse :** 1.0.0~ynh1
 
 **Démo :** https://demo.galette.eu/login
 
