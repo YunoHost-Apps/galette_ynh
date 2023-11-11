@@ -59,7 +59,6 @@ ram.runtime = "50M"
         url = "https://download.tuxfamily.org/galette/galette-0.9.6.1.tar.bz2"
         sha256 = "7f3d09af19711372cc35d48352e115ee96e835ea879298347289d274308bb011"
 
-
     [resources.system_user]
     allow_email = true
 
