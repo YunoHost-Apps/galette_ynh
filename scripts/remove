@@ -23,14 +23,6 @@ ynh_remove_nginx_config
 # Remove the dedicated PHP-FPM config
 ynh_remove_fpm_config
 
-if [ $database == "postgresql" ]
-then
-	ynh_script_progression --message="Removing PostgreSQL database..." --weight=2
-	ynh_psql_remove_db --db_user=$db_user --db_name=$db_name
-else
-	ynh_script_progression --message="Removing MySQL database..." --weight=2
-	ynh_mysql_remove_db --db_user=$db_user --db_name=$db_name
-fi
 #=================================================
 # END OF SCRIPT
 #=================================================

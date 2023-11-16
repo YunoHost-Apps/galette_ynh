@@ -16,29 +16,6 @@ source /usr/share/yunohost/helpers
 timezone="$(cat /etc/timezone)"
 
 #=================================================
-# CREATE A SQL DATABASE
-#=================================================
-
-db_name=$(ynh_sanitize_dbid --db_name=$app)
-db_user=$db_name
-db_pwd=$(ynh_string_random --length=30)
-ynh_app_setting_set --app=$app --key=db_name --value=$db_name
-ynh_app_setting_set --app=$app --key=db_user --value=$db_user
-ynh_app_setting_set --app=$app --key=db_pwd --value=$db_pwd
-
-if [ $database == "postgresql" ]
-then
-	ynh_script_progression --message="Creating a PostgreSQL database..." --weight=2
-	ynh_psql_test_if_first_run
-	ynh_psql_setup_db --db_user=$db_user --db_name=$db_name
-	ynh_app_setting_set --app=$app --key=db_pwd --value=$db_pwd
-else
-	ynh_script_progression --message="Creating a MySQL database..." --weight=2
-	ynh_mysql_setup_db --db_user=$db_user --db_name=$db_name
-	ynh_app_setting_set --app=$app --key=db_pwd --value=$db_pwd
-fi
-
-#=================================================
 # DOWNLOAD, CHECK AND UNPACK SOURCE
 #=================================================
 ynh_script_progression --message="Setting up source files..." --weight=1
@@ -84,12 +61,7 @@ ynh_script_progression --message="Setuping application with CURL..."
 ynh_script_progression --message="Finalizing installation..."
 ynh_local_curl "/installer.php" "install_permsok=1"
 ynh_local_curl "/installer.php"  "install_type=i"
-if [ $database == "postgresql" ]
-then
-	ynh_local_curl "/installer.php"  "install_dbtype=pgsql" "install_dbhost=localhost" "install_dbport=5432" "install_dbuser=$db_user" "install_dbpass=$db_pwd" "install_dbname=$db_name" "install_dbprefix=galette_"
-else
-	ynh_local_curl "/installer.php"  "install_dbtype=mysql" "install_dbhost=localhost" "install_dbport=3306" "install_dbuser=$db_user" "install_dbpass=$db_pwd" "install_dbname=$db_name" "install_dbprefix=galette_"
-fi
+ynh_local_curl "/installer.php"  "install_dbtype=pgsql" "install_dbhost=localhost" "install_dbport=5432" "install_dbuser=$db_user" "install_dbpass=$db_pwd" "install_dbname=$db_name" "install_dbprefix=galette_"
 ynh_local_curl "/installer.php"  "install_dbperms_ok=1"
 ynh_local_curl "/installer.php"  "install_dbwrite_ok=1"
 ynh_local_curl "/installer.php"  "install_adminlogin=$admin" "install_adminpass=$password" "install_adminpass_verif=$password"

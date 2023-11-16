@@ -47,13 +47,6 @@ ram.runtime = "50M"
     [install.password]
     type = "password"
 
-    [install.database]
-    ask.en = "Choose SQL database you want"
-    ask.fr = "Choisissez la base de données SQL souhaitée"
-    type = "select"
-    choices = ["postgresql", "mysql"]
-    default = "postgresql"
-
 [resources]
         [resources.sources.main]
         url = "https://github.com/galette/galette/releases/download/1.0.0rc2/galette-1.0.0-rc2-20231017-a030a93d5e.tar.bz2"
@@ -68,13 +61,7 @@ ram.runtime = "50M"
     main.url = "/"
 
     [resources.apt]
-    packages = "php8.2-tidy, php8.2-intl, php8.2-mbstring, php8.2-xml, php8.2-gd, php8.2-curl"
+    packages = "postgresql, php8.2-tidy, php8.2-intl, php8.2-mbstring, php8.2-xml, php8.2-gd, php8.2-curl, php8.2-pgsql"
 
-    packages_from_raw_bash = """
-    if [[ "$database" == "mysql" ]]; then 
-        echo "mariadb-server, php8.2-mysql"
-            
-    elif [[ "$database" == "postgresql" ]]; then
-        echo "postgresql, postgresql-contrib, php8.2-pgsql"
-    fi
-    """
+    [resources.database]
+    type = "postgresql"

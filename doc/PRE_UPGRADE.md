@@ -1,0 +1,1 @@
+if you were using a mysql DB, the new version only supports postgres and you should migrate it manually before upgrading.
