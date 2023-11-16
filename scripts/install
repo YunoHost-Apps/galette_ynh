@@ -47,7 +47,7 @@ ynh_use_logrotate
 #=================================================
 ynh_script_progression --message="Adding a configuration file..." --weight=1
 
-ynh_add_config --template="config.inc.php.$database" --destination="$install_dir/galette/config/config.inc.php"
+ynh_add_config --template="config.inc.php" --destination="$install_dir/galette/config/config.inc.php"
 
 chmod 400 "$install_dir/galette/config/config.inc.php"
 chown $app:$app "$install_dir/galette/config/config.inc.php"
