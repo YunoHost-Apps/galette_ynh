@@ -29,20 +29,7 @@ if [ "$upgrade_type" == "UPGRADE_APP" ]
 then
 	ynh_script_progression --message="Upgrading source files..."
 
-	# Download, check integrity, uncompress and patch the source from app.src
-	#mv "$install_dir" "$install_dir.old"
-
 	ynh_setup_source --dest_dir="$install_dir" --keep="galette/config/config.inc.php galette/data galette/plugins"
-
-	# when running automatic tests, there is no config.inc.php
-	#if [ -e "$install_dir.old/galette/config/config.inc.php" ]; then
-	#    cp "$install_dir.old/galette/config/config.inc.php" "$install_dir/galette/config/config.inc.php"
-	#    cp -r "$install_dir.old/galette/data" "$install_dir/galette/data"
-	#    cp -r "$install_dir.old/galette/plugins" "$install_dir/galette/plugins"
-	#fi
-
-	# delete temp directory
-	#ynh_secure_remove "$install_dir.old"
 fi
 
 chmod -R o-rwx "$install_dir"
