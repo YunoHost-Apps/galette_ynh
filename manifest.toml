@@ -51,7 +51,7 @@ ram.runtime = "50M"
         [resources.sources.main]
         url = "https://github.com/galette/galette/releases/download/1.0.0rc3/galette-1.0.0-rc3-20231122-a9c2ed838d.1.tar.bz2"
         sha256 = "b4d5ed0c47baf03d5f1be69e3ba25b10ece5e22e62c308b4bc9867f4003a0a55"
-        autoupdate.strategy = "latest_github_release"
+        autoupdate.strategy = "latest_github_tag"
 
     [resources.system_user]
     allow_email = true
