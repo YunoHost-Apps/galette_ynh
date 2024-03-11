@@ -29,7 +29,7 @@ if [ "$upgrade_type" == "UPGRADE_APP" ]
 then
 	ynh_script_progression --message="Upgrading source files..."
 
-	ynh_setup_source --dest_dir="$install_dir" --keep="galette/config/config.inc.php galette/data galette/plugins"
+	ynh_setup_source --dest_dir="$install_dir" --full_replace=1 --keep="galette/config/config.inc.php galette/data galette/plugins"
 fi
 
 chmod -R o-rwx "$install_dir"
