@@ -9,7 +9,7 @@ It shall NOT be edited by hand.
 
 [![Install Galette with YunoHost](https://install-app.yunohost.org/install-with-yunohost.svg)](https://install-app.yunohost.org/?app=galette)
 
-*[Lire ce readme en français.](./README_fr.md)*
+*[Read this README is other languages.](./ALL_README.md)*
 
 > *This package allows you to install Galette quickly and simply on a YunoHost server.
 If you don't have YunoHost, please consult [the guide](https://yunohost.org/#/install) to learn how to install it.*
@@ -29,10 +29,9 @@ Galette is a membership management web application towards non profit organizati
 - Addition of dynamic fields to members, contributions and transactions files
 - Plugin support
 
+**Shipped version:** 1.0.4~ynh1
 
-**Shipped version:** 1.0.3~ynh1
-
-**Demo:** https://demo.galette.eu/login
+**Demo:** <https://demo.galette.eu/login>
 
 ## Screenshots
 
@@ -40,19 +39,20 @@ Galette is a membership management web application towards non profit organizati
 
 ## Documentation and resources
 
-* Official app website: <https://www.galette.eu>
-* Official admin documentation: <https://doc.galette.eu/fr/master/>
-* Upstream app code repository: <https://github.com/galette/galette>
-* YunoHost Store: <https://apps.yunohost.org/app/galette>
-* Report a bug: <https://github.com/YunoHost-Apps/galette_ynh/issues>
+- Official app website: <https://www.galette.eu>
+- Official admin documentation: <https://doc.galette.eu/fr/master/>
+- Upstream app code repository: <https://github.com/galette/galette>
+- YunoHost Store: <https://apps.yunohost.org/app/galette>
+- Report a bug: <https://github.com/YunoHost-Apps/galette_ynh/issues>
 
 ## Developer info
 
-Please send your pull request to the [testing branch](https://github.com/YunoHost-Apps/galette_ynh/tree/testing).
+Please send your pull request to the [testing branch](https://github.com/YunoHost-Apps/galette_ynh/tree/testing),
+
 
 To try the testing branch, please proceed like that.
 
-``` bash
+```bash
 sudo yunohost app install https://github.com/YunoHost-Apps/galette_ynh/tree/testing --debug
 or
 sudo yunohost app upgrade galette -u https://github.com/YunoHost-Apps/galette_ynh/tree/testing --debug
