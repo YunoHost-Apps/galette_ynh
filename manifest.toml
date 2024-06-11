@@ -49,8 +49,8 @@ ram.runtime = "50M"
 
 [resources]
         [resources.sources.main]
-        url = "https://github.com/galette/galette/archive/refs/tags/1.1.0.tar.gz"
-        sha256 = "c039c472fd3e6cab9051926bc510bbbdfd36b3a2f72431b06958c33157d5f69e"
+        url = "https://galette.eu/download/galette-1.1.0.tar.bz2"
+        sha256 = "dddec991c9a48b4ec7b9c25a5365a5cff8d35cbe674975092014f5512804d021"
         autoupdate.strategy = "latest_github_tag"
 
     [resources.system_user]
