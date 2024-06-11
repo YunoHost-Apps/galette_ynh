@@ -5,7 +5,7 @@ name = "Galette"
 description.en = "Membership management web application for non profit organizations"
 description.fr = "Outil de gestion d'adhérents et de cotisation en ligne pour associations"
 
-version = "1.0.4~ynh1"
+version = "1.1.0~ynh1"
 
 maintainers = []
 
@@ -49,8 +49,8 @@ ram.runtime = "50M"
 
 [resources]
         [resources.sources.main]
-        url = "https://github.com/galette/galette/archive/refs/tags/1.0.4.tar.gz"
-        sha256 = "7f4c784fb1db00fb85723e35e86c74bc1d0e4263c50c182af609b9b7bed505ee"
+        url = "https://github.com/galette/galette/archive/refs/tags/1.1.0.tar.gz"
+        sha256 = "c039c472fd3e6cab9051926bc510bbbdfd36b3a2f72431b06958c33157d5f69e"
         autoupdate.strategy = "latest_github_tag"
 
     [resources.system_user]
@@ -62,7 +62,7 @@ ram.runtime = "50M"
     main.url = "/"
 
     [resources.apt]
-    packages = "postgresql, php8.2-tidy, php8.2-intl, php8.2-mbstring, php8.2-xml, php8.2-gd, php8.2-curl, php8.2-pgsql"
+    packages = "postgresql, php8.3-tidy, php8.3-intl, php8.3-mbstring, php8.3-xml, php8.3-gd, php8.3-curl, php8.3-pgsql"
 
     [resources.database]
     type = "postgresql"
