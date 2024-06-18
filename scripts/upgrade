@@ -16,21 +16,11 @@ source /usr/share/yunohost/helpers
 timezone="$(cat /etc/timezone)"
 
 #=================================================
-# CHECK VERSION
-#=================================================
-
-upgrade_type=$(ynh_check_app_version_changed)
-
-#=================================================
 # DOWNLOAD, CHECK AND UNPACK SOURCE
 #=================================================
+ynh_script_progression --message="Upgrading source files..."
 
-if [ "$upgrade_type" == "UPGRADE_APP" ]
-then
-	ynh_script_progression --message="Upgrading source files..."
-
-	ynh_setup_source --dest_dir="$install_dir" --keep="galette/config/config.inc.php galette/data galette/plugins"
-fi
+ynh_setup_source --dest_dir="$install_dir" --keep="galette/config/config.inc.php galette/data galette/plugins"
 
 chmod -R o-rwx "$install_dir"
 chown -R $app:www-data "$install_dir"

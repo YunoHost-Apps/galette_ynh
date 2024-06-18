@@ -9,7 +9,7 @@ It shall NOT be edited by hand.
 
 [![Install Galette with YunoHost](https://install-app.yunohost.org/install-with-yunohost.svg)](https://install-app.yunohost.org/?app=galette)
 
-*[Read this README is other languages.](./ALL_README.md)*
+*[Read this README in other languages.](./ALL_README.md)*
 
 > *This package allows you to install Galette quickly and simply on a YunoHost server.*  
 > *If you don't have YunoHost, please consult [the guide](https://yunohost.org/install) to learn how to install it.*
@@ -30,7 +30,7 @@ Galette is a membership management web application towards non profit organizati
 - Plugin support
 
 
-**Shipped version:** 1.0.0~ynh3
+**Shipped version:** 1.1.0~ynh1
 
 **Demo:** <https://demo.galette.eu/login>
 
