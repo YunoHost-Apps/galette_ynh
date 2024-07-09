@@ -1,3 +1,5 @@
+#:schema https://raw.githubusercontent.com/YunoHost/apps/master/schemas/manifest.v2.schema.json
+
 packaging_format = 2
 
 id = "galette"
@@ -5,7 +7,7 @@ name = "Galette"
 description.en = "Membership management web application for non profit organizations"
 description.fr = "Outil de gestion d'adhérents et de cotisation en ligne pour associations"
 
-version = "1.1.1~ynh1"
+version = "1.1.2~ynh1"
 
 maintainers = []
 
@@ -48,10 +50,12 @@ ram.runtime = "50M"
     type = "password"
 
 [resources]
-        [resources.sources.main]
-        url = "https://galette.eu/download/galette-1.1.1.tar.bz2"
-        sha256 = "d13502ac34ec782851d607206707f4cbaf6c0cc315038a4d07b73cd6bf8ffbfb"
-        autoupdate.strategy = "latest_github_tag"
+    [resources.sources.main]
+    url = "https://www.galette.eu/download/galette-1.1.2.tar.bz2"
+    sha256 = "37d6d430b884480c4595f2eaca1810be3a89dcb1e708ca5440f9ae7363916cdd"
+
+    autoupdate.strategy = "latest_github_tag"
+    autoupdate.needs_manual_tweaks = true
 
     [resources.system_user]
     allow_email = true

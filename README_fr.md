@@ -5,7 +5,7 @@ Il NE doit PAS être modifié à la main.
 
 # Galette pour YunoHost
 
-[![Niveau d’intégration](https://dash.yunohost.org/integration/galette.svg)](https://dash.yunohost.org/appci/app/galette) ![Statut du fonctionnement](https://ci-apps.yunohost.org/ci/badges/galette.status.svg) ![Statut de maintenance](https://ci-apps.yunohost.org/ci/badges/galette.maintain.svg)
+[![Niveau d’intégration](https://dash.yunohost.org/integration/galette.svg)](https://ci-apps.yunohost.org/ci/apps/galette/) ![Statut du fonctionnement](https://ci-apps.yunohost.org/ci/badges/galette.status.svg) ![Statut de maintenance](https://ci-apps.yunohost.org/ci/badges/galette.maintain.svg)
 
 [![Installer Galette avec YunoHost](https://install-app.yunohost.org/install-with-yunohost.svg)](https://install-app.yunohost.org/?app=galette)
 
@@ -31,7 +31,7 @@ Outil de gestion d'adhérents et de cotisation en ligne pour associations.
 - Support de plugins
 
 
-**Version incluse :** 1.1.1~ynh1
+**Version incluse :** 1.1.2~ynh1
 
 **Démo :** <https://demo.galette.eu/login>
 
