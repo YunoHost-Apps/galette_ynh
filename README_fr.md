@@ -31,7 +31,7 @@ Outil de gestion d'adhérents et de cotisation en ligne pour associations.
 - Support de plugins
 
 
-**Version incluse :** 1.1.2~ynh1
+**Version incluse :** 1.1.3~ynh1
 
 **Démo :** <https://demo.galette.eu/login>
 
