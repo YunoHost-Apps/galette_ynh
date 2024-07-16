@@ -86,10 +86,9 @@ ram.runtime = "50M"
     packages = "php8.3-tidy, php8.3-intl, php8.3-mbstring, php8.3-xml, php8.3-gd, php8.3-curl"
     packages_from_raw_bash = """
        if [[ "$db_type" == "mysql" ]]; then 
-   	  echo "mariadb-server, php8.3-mysql"
-       fi
+   	    echo "mariadb-server, php8.3-mysql"
        elif [[ "$db_type" == "postgresql" ]]; then
-            echo "postgresql, php8.3-pgsql"
+        echo "postgresql, php8.3-pgsql"
        fi
     """
 
