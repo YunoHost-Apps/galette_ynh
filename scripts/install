@@ -29,7 +29,7 @@ chown -R $app:www-data "$install_dir"
 #=================================================
 # DATA BASE CREATION (not done via ressources_database
 #=================================================
-ynh_script_progression --message="icréating data base for $app..." --weight=1
+ynh_script_progression --message="créating data base for $app..." --weight=1
     db_name=$(ynh_sanitize_dbid --db_name=$app)
     db_user=$db_name
     db_pwd=$(ynh_string_random --length=30)
