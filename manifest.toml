@@ -52,7 +52,7 @@ ram.runtime = "50M"
     [install.db_type]
      ask.fr = "quel moteur de base de données souhaitez-vous"
      ask.en = "which data base engine do you prefer"
-     help.fr : "Si vous ne savez pas quoi choisir, c'est que ça n'a aucune importance;"
+     help.fr = "Si vous ne savez pas quoi choisir, c'est que ça n'a aucune importance;"
      help.en = "If you don't know what to choose ... don't choose ;-) "
      type = "select"
      choices = ["mysql","postgresql"]
@@ -60,7 +60,7 @@ ram.runtime = "50M"
 
     [install.tb_prefix]
      ask.fr = "voulez-vous utiliser un préfixe de table différent du défaut (galette_)?"
-     ask.help = "si oui, veillez à le terminer par un _ ('souligné', 'tiret du 8',...)
+     ask.help = "si oui, veillez à le terminer par un _ ('souligné', 'tiret du 8',...)"
      type = "string"
      default = "galette_"
  
