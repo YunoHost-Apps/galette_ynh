@@ -31,7 +31,11 @@ chown -R $app:www-data "$install_dir"
 #=================================================
 ynh_script_progression --message="Restoring the PostgreSQL database..." --weight=1
 
-ynh_psql_connect_as --user=$db_user --password=$db_pwd --database=$db_name < ./db.sql
+if [ $db_type == "mysql" ]; then
+ ynh_mysql_connect_as --user=$db_user --password=$db_pwd --database=$db_name < ./db.sql
+elif [ $db_type == "postgresql" ]; then
+ ynh_psql_connect_as --user=$db_user --password=$db_pwd --database=$db_name < ./db.sql
+fi
 
 #=================================================
 # RESTORE SYSTEM CONFIGURATIONS

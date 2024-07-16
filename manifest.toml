@@ -7,7 +7,7 @@ name = "Galette"
 description.en = "Membership management web application for non profit organizations"
 description.fr = "Outil de gestion d'adhérents et de cotisation en ligne pour associations"
 
-version = "1.1.3~ynh1"
+version = "1.1.3~ynh2"
 
 maintainers = []
 
@@ -49,6 +49,22 @@ ram.runtime = "50M"
     [install.password]
     type = "password"
 
+    [install.db_type]
+     ask.fr = "quel moteur de base de données souhaitez-vous"
+     ask.en = "which data base engine do you prefer"
+     help.fr : "Si vous ne savez pas quoi chosir, c'est que ça n'a aucune importance;"
+     help.en = "If you don't know what to choose ... don't choose ;-) "
+     type = "select"
+     choices = ["mysql","postgresql"]
+     default = "postgresql"
+
+    [install.tb_prefix]
+     ask.fr = "voulez-vous utiliser un préfixe de table différent du défaut (galette_)?"
+     ask.help = "si oui, veillez à le terminer par un _ ("souligné", "tiret du 8",...)
+     type = "string"
+     default = "galette_"
+ 
+
 [resources]
     [resources.sources.main]
     url = "https://www.galette.eu/download/galette-1.1.3.tar.bz2"
@@ -66,7 +82,19 @@ ram.runtime = "50M"
     main.url = "/"
 
     [resources.apt]
-    packages = "postgresql, php8.3-tidy, php8.3-intl, php8.3-mbstring, php8.3-xml, php8.3-gd, php8.3-curl, php8.3-pgsql"
+    
+    packages = "php8.3-tidy, php8.3-intl, php8.3-mbstring, php8.3-xml, php8.3-gd, php8.3-curl"
+    packages_from_raw_bash = """
+       if [[ "$db_type" == "mysql" ]]; then 
+   	  echo "mariadb-server, php8.3-mysql"
+       fi
+       elif [[ "$db_type" == "postgresql" ]]; then
+            echo "postgresql, php8.3-pgsql"
+       fi
+    """
 
-    [resources.database]
-    type = "postgresql"
+
+# seulement une de ces lignes est possible. Peut-on faire ça par un test ? ou suffit-il d'initialiser la base dans le scriot d'install ?
+#    [resources.database]
+#     type = "mysql"
+#     type = "postgresql"
