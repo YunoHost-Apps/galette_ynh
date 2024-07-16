@@ -91,9 +91,3 @@ ram.runtime = "50M"
         echo "postgresql, php8.3-pgsql"
        fi
     """
-
-
-# seulement une de ces lignes est possible. Peut-on faire ça par un test ? ou suffit-il d'initialiser la base dans le scriot d'install ?
-#    [resources.database]
-#     type = "mysql"
-#     type = "postgresql"
