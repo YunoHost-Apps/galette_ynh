@@ -90,6 +90,7 @@ ynh_local_curl "/installer.php"  "install_dbtype=$db_type" "install_dbhost=local
 ynh_local_curl "/installer.php"  "install_dbperms_ok=1"
 ynh_local_curl "/installer.php"  "install_dbwrite_ok=1"
 ynh_local_curl "/installer.php"  "install_adminlogin=$admin" "install_adminpass=$password" "install_adminpass_verif=$password"
+ynh_local_curl "/installer.php"  "install_telemetry_ok=1"
 ynh_local_curl "/installer.php"  "install_prefs_ok=1"
 
 #=================================================
