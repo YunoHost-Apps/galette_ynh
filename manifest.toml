@@ -47,7 +47,7 @@ ram.runtime = "50M"
     type = "user"
 
     [install.password]
-    type = "password"
+    type = "string"
 
     [install.db_type]
      ask.fr = "quel moteur de base de données souhaitez-vous"
@@ -60,7 +60,7 @@ ram.runtime = "50M"
 
     [install.tb_prefix]
      ask.fr = "voulez-vous utiliser un préfixe de table différent du défaut (galette_)?"
-     ask.help = "si oui, veillez à le terminer par un _ ('souligné', 'tiret du 8',...)"
+     ask.help = "n'est utile que dans des cas très particuliers"
      type = "string"
      default = "galette_"
  
