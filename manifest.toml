@@ -47,7 +47,9 @@ ram.runtime = "50M"
     type = "user"
 
     [install.password]
-    type = "string"
+    type = "password"
+    help.fr = "pas besoin que ce soit le même que pour yunohost. ATTENTION : pas de caractères spéciaux dans le mot de passe, ça ne marche pas (encore); "
+    help.en = "it's not necessary to use the samme pw as for yunohost. WARNING : nos special char in this passord, there is (still) a bug with"
 
     [install.db_type]
      ask.fr = "quel moteur de base de données souhaitez-vous"
