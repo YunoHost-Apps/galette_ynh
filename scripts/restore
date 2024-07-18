@@ -27,14 +27,21 @@ chmod -R o-rwx "$install_dir"
 chown -R $app:www-data "$install_dir"
 
 #=================================================
-# RESTORE THE POSTGRESQL DATABASE
+# RESTORE THE DATABASE
 #=================================================
-ynh_script_progression --message="Restoring the PostgreSQL database..." --weight=1
+ynh_script_progression --message="Restoring the database..." --weight=1
 
-if [ $db_type == "mysql" ]; then
- ynh_mysql_connect_as --user=$db_user --password=$db_pwd --database=$db_name < ./db.sql
-elif [ $db_type == "postgresql" ]; then
- ynh_psql_connect_as --user=$db_user --password=$db_pwd --database=$db_name < ./db.sql
+    db_name=$(ynh_app_setting_get --app=$app --key=db_name)
+    db_user=$db_name
+    db_pwd=$(ynh_app_setting_get --app=$app --key=db_pwd)
+
+    if [ $db_type == "mysql" ]; then
+        ynh_mysql_setup_db --db_user=$db_user --db_name=$db_name --db_pwd=$db_pwd
+        ynh_mysql_connect_as --user=$db_user --password=$db_pwd --database=$db_name < ./db.sql
+    elif [ $db_type == "postgresql" ]; then
+        ynh_psql_setup_db --db_user=$db_user --db_name=$db_name --db_pwd=$db_pwd
+        ynh_psql_connect_as --user=$db_user --password=$db_pwd --database=$db_name < ./db.sql
+    fi
 fi
 
 #=================================================

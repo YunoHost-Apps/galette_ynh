@@ -10,6 +10,20 @@ source _common.sh
 source /usr/share/yunohost/helpers
 
 #=================================================
+#Remove the data base
+#=================================================
+ynh_script_progression --message="Removing the database..." --weight=2
+
+db_name=$(ynh_app_setting_get --app=$app --key=db_name)
+db_user=$db_name
+
+if [ $db_type == "mysql" ]; then
+        ynh_mysql_remove_db --db_user=$db_user --db_name=$db_name
+elif [ $db_type == "postgresql" ]; then
+        ynh_psql_remove_db --db_user=$db_user --db_name=$db_name
+fi
+
+#=================================================
 # REMOVE SYSTEM CONFIGURATIONS
 #=================================================
 ynh_script_progression --message="Removing system configurations related to $app..." --weight=1
