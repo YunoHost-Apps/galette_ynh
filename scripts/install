@@ -27,7 +27,8 @@ chmod -R o-rwx "$install_dir"
 chown -R $app:www-data "$install_dir"
 
 #=================================================
-# DATA BASE CREATION (not done via ressources_database
+# DATA BASE CREATION
+# as we want to choose the database engine, we cannot rely on manifest to do this
 #=================================================
 ynh_script_progression --message="créating data base for $app..." --weight=1
     db_name=$(ynh_sanitize_dbid --db_name=$app)
@@ -58,19 +59,6 @@ ynh_add_nginx_config
 ynh_use_logrotate
 
 #=================================================
-# SPECIFIC SETUP
-#=================================================
-# ADD A CONFIGURATION
-# suppress to let galette create it it's proper way
-#=================================================
-#ynh_script_progression --message="Adding a configuration file..." --weight=1
-
-#ynh_add_config --template="config.inc.php" --destination="$install_dir/galette/config/config.inc.php"
-
-#chmod 400 "$install_dir/galette/config/config.inc.php"
-#chown $app:$app "$install_dir/galette/config/config.inc.php"
-
-#=================================================
 # SETUP APPLICATION WITH CURL
 #=================================================
 ynh_script_progression --message="Setuping application with CURL..."
@@ -89,6 +77,7 @@ ynh_local_curl "/installer.php"  "install_type=i"
 ynh_local_curl "/installer.php"  "install_dbtype=$db_type" "install_dbhost=localhost" "install_dbport=$db_port" "install_dbuser=$db_user" "install_dbpass=$db_pwd" "install_dbname=$db_name" "install_dbprefix=$tb_prefix"
 ynh_local_curl "/installer.php"  "install_dbperms_ok=1"
 ynh_local_curl "/installer.php"  "install_dbwrite_ok=1"
+password=`jq -Rj @uri <<<$password` #to escape special characters that may appear in a password
 ynh_local_curl "/installer.php"  "install_adminlogin=$admin" "install_adminpass=$password" "install_adminpass_verif=$password"
 ynh_local_curl "/installer.php"  "install_telemetry_ok=1"
 ynh_local_curl "/installer.php"  "install_prefs_ok=1"
