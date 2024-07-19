@@ -36,7 +36,11 @@ ynh_backup --src_path="/etc/logrotate.d/$app"
 #=================================================
 ynh_print_info --message="Backing up the PostgreSQL database..."
 
-ynh_psql_dump_db --database="$db_name" > db.sql
+if [ $db_type == "mysql" ]; then
+ ynh_mysql_dump_db --database="$db_name" > db.sql
+elif [ $db_type == "postgresql" ]; then
+ ynh_psql_dump_db --database="$db_name" > db.sql
+fi
 
 #=================================================
 # END OF SCRIPT

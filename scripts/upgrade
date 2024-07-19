@@ -20,7 +20,7 @@ timezone="$(cat /etc/timezone)"
 #=================================================
 ynh_script_progression --message="Upgrading source files..."
 
-ynh_setup_source --dest_dir="$install_dir" --keep="galette/config/config.inc.php galette/data galette/plugins"
+ynh_setup_source --dest_dir="$install_dir" --keep="galette/config galette/data galette/plugins"
 
 chmod -R o-rwx "$install_dir"
 chown -R $app:www-data "$install_dir"
