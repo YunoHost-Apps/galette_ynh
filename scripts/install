@@ -1,11 +1,5 @@
 #!/bin/bash
 
-#=================================================
-# GENERIC START
-#=================================================
-# IMPORT GENERIC HELPERS
-#=================================================
-
 source _common.sh
 source /usr/share/yunohost/helpers
 
@@ -18,47 +12,46 @@ timezone="$(cat /etc/timezone)"
 #=================================================
 # DOWNLOAD, CHECK AND UNPACK SOURCE
 #=================================================
-ynh_script_progression --message="Setting up source files..." --weight=1
+ynh_script_progression "Setting up source files..."
 
 # Download, check integrity, uncompress and patch the source from app.src
 ynh_setup_source --dest_dir="$install_dir"
 
-chmod -R o-rwx "$install_dir"
-chown -R $app:www-data "$install_dir"
-
+#REMOVEME? Assuming the install dir is setup using ynh_setup_source, the proper chmod/chowns are now already applied and it shouldn't be necessary to tweak perms | chmod -R o-rwx "$install_dir"
+#REMOVEME? Assuming the install dir is setup using ynh_setup_source, the proper chmod/chowns are now already applied and it shouldn't be necessary to tweak perms | chown -R $app:www-data "$install_dir"
 #=================================================
 # SYSTEM CONFIGURATION
 #=================================================
-ynh_script_progression --message="Adding system configurations related to $app..." --weight=1
+ynh_script_progression "Adding system configurations related to $app..."
 
 # Create a dedicated PHP-FPM config
-ynh_add_fpm_config
+ynh_config_add_phpfpm
 
 # Create a dedicated NGINX config
-ynh_add_nginx_config
+ynh_config_add_nginx
 
 # Use logrotate to manage application logfile(s)
-ynh_use_logrotate
+ynh_config_add_logrotate
 
 #=================================================
 # SPECIFIC SETUP
 #=================================================
 # ADD A CONFIGURATION
 #=================================================
-ynh_script_progression --message="Adding a configuration file..." --weight=1
+ynh_script_progression "Adding $app's configuration..."
 
-ynh_add_config --template="config.inc.php" --destination="$install_dir/galette/config/config.inc.php"
+ynh_config_add --template="config.inc.php" --destination="$install_dir/galette/config/config.inc.php"
 
-chmod 400 "$install_dir/galette/config/config.inc.php"
-chown $app:$app "$install_dir/galette/config/config.inc.php"
+#REMOVEME? Assuming the file is setup using ynh_config_add, the proper chmod/chowns are now already applied and it shouldn't be necessary to tweak perms | chmod 400 "$install_dir/galette/config/config.inc.php"
+#REMOVEME? Assuming the file is setup using ynh_config_add, the proper chmod/chowns are now already applied and it shouldn't be necessary to tweak perms | chown $app:$app "$install_dir/galette/config/config.inc.php"
 
 #=================================================
 # SETUP APPLICATION WITH CURL
 #=================================================
-ynh_script_progression --message="Setuping application with CURL..."
+ynh_script_progression "Setuping application with CURL..."
 
 # Installation with curl
-ynh_script_progression --message="Finalizing installation..."
+ynh_script_progression "Finalizing installation..."
 ynh_local_curl "/installer.php" "install_permsok=1"
 ynh_local_curl "/installer.php"  "install_type=i"
 ynh_local_curl "/installer.php"  "install_dbtype=pgsql" "install_dbhost=localhost" "install_dbport=5432" "install_dbuser=$db_user" "install_dbpass=$db_pwd" "install_dbname=$db_name" "install_dbprefix=galette_"
@@ -71,8 +64,8 @@ ynh_local_curl "/installer.php"  "install_prefs_ok=1"
 # SECURE FILES AND DIRECTORIES
 #=================================================
 
-chown $app  $install_dir/galette/config
-chmod g+rwx $install_dir/galette/config
+#REMOVEME? Assuming the file is setup using ynh_config_add, the proper chmod/chowns are now already applied and it shouldn't be necessary to tweak perms | chown $app  $install_dir/galette/config
+#REMOVEME? Assuming the file is setup using ynh_config_add, the proper chmod/chowns are now already applied and it shouldn't be necessary to tweak perms | chmod g+rwx $install_dir/galette/config
 
 for folder in attachments cache exports files imports logs photos templates_c tempimages
 do
@@ -84,4 +77,4 @@ done
 # END OF SCRIPT
 #=================================================
 
-ynh_script_progression --message="Installation of $app completed" --last
+ynh_script_progression "Installation of $app completed"
