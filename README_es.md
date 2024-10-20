@@ -30,7 +30,7 @@ Galette is a membership management web application towards non profit organizati
 - Plugin support
 
 
-**Versión actual:** 1.1.3~ynh1
+**Versión actual:** 1.1.4~ynh1
 
 **Demo:** <https://demo.galette.eu/login>
 
@@ -48,7 +48,7 @@ Galette is a membership management web application towards non profit organizati
 
 ## Información para desarrolladores
 
-Por favor enviar sus correcciones a la [`branch testing`](https://github.com/YunoHost-Apps/galette_ynh/tree/testing
+Por favor enviar sus correcciones a la [rama `testing`](https://github.com/YunoHost-Apps/galette_ynh/tree/testing).
 
 Para probar la rama `testing`, sigue asÍ:
 
