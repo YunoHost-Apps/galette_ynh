@@ -1,12 +1,7 @@
 #!/bin/bash
 
-# Keep this path for calling _common.sh inside the execution's context of backup and restore scripts
 source ../settings/scripts/_common.sh
 source /usr/share/yunohost/helpers
-
-#=================================================
-# LOAD SETTINGS
-#=================================================
 
 timezone="$(cat /etc/timezone)"
 
@@ -17,8 +12,6 @@ ynh_script_progression "Restoring the app main directory..."
 
 ynh_restore "$install_dir"
 
-#REMOVEME? Assuming the install dir is setup using ynh_setup_source, the proper chmod/chowns are now already applied and it shouldn't be necessary to tweak perms | chmod -R o-rwx "$install_dir"
-#REMOVEME? Assuming the install dir is setup using ynh_setup_source, the proper chmod/chowns are now already applied and it shouldn't be necessary to tweak perms | chown -R $app:www-data "$install_dir"
 #=================================================
 # RESTORE THE POSTGRESQL DATABASE
 #=================================================
@@ -26,8 +19,6 @@ ynh_script_progression "Restoring the PostgreSQL database..."
 
 ynh_psql_db_shell < ./db.sql
 
-#=================================================
-# RESTORE SYSTEM CONFIGURATIONS
 #=================================================
 # RESTORE THE PHP-FPM CONFIGURATION
 #=================================================
@@ -43,8 +34,8 @@ ynh_restore "/etc/logrotate.d/$app"
 # RESTORE USER RIGHTS
 #=================================================
 
-#REMOVEME? Assuming the file is setup using ynh_config_add, the proper chmod/chowns are now already applied and it shouldn't be necessary to tweak perms | chown "$app" "$install_dir/galette/config"
-#REMOVEME? Assuming the file is setup using ynh_config_add, the proper chmod/chowns are now already applied and it shouldn't be necessary to tweak perms | chmod 750 "$install_dir/galette/config"
+chown "$app" "$install_dir/galette/config"
+chmod 750 "$install_dir/galette/config"
 
 for folder in attachments cache exports files imports logs photos templates_c tempimages
 do
