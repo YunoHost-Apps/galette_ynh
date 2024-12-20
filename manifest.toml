@@ -7,7 +7,7 @@ name = "Galette"
 description.en = "Membership management web application for non profit organizations"
 description.fr = "Outil de gestion d'adhérents et de cotisation en ligne pour associations"
 
-version = "1.1.3~ynh1"
+version = "1.1.4~ynh1"
 
 maintainers = []
 
@@ -19,7 +19,7 @@ admindoc = "https://doc.galette.eu/fr/master/"
 code = "https://github.com/galette/galette"
 
 [integration]
-yunohost = ">= 11.2"
+yunohost = ">= 12.0.9"
 architectures = "all"
 multi_instance = true
 
@@ -51,8 +51,8 @@ ram.runtime = "50M"
 
 [resources]
     [resources.sources.main]
-    url = "https://www.galette.eu/download/galette-1.1.3.tar.bz2"
-    sha256 = "4797a529e5ba7925a2f265fce30801ca05db515832e6bc00c51413492841993a"
+    url = "https://www.galette.eu/download/galette-1.1.4.tar.bz2"
+    sha256 = "fd76ebebe29d8b52d8a49964c7c227139a1c2fc0dddabd87338ade3ad4bd5a72"
 
     autoupdate.strategy = "latest_github_tag"
     autoupdate.needs_manual_tweaks = true
