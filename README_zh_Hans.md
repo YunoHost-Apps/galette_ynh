@@ -5,7 +5,9 @@
 
 # YunoHost 上的 Galette
 
-[![集成程度](https://dash.yunohost.org/integration/galette.svg)](https://ci-apps.yunohost.org/ci/apps/galette/) ![工作状态](https://ci-apps.yunohost.org/ci/badges/galette.status.svg) ![维护状态](https://ci-apps.yunohost.org/ci/badges/galette.maintain.svg)
+[![集成程度](https://apps.yunohost.org/badge/integration/galette)](https://ci-apps.yunohost.org/ci/apps/galette/)
+![工作状态](https://apps.yunohost.org/badge/state/galette)
+![维护状态](https://apps.yunohost.org/badge/maintained/galette)
 
 [![使用 YunoHost 安装 Galette](https://install-app.yunohost.org/install-with-yunohost.svg)](https://install-app.yunohost.org/?app=galette)
 
@@ -30,7 +32,7 @@ Galette is a membership management web application towards non profit organizati
 - Plugin support
 
 
-**分发版本：** 1.1.3~ynh1
+**分发版本：** 1.1.4~ynh1
 
 **演示：** <https://demo.galette.eu/login>
 

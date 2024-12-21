@@ -5,7 +5,9 @@ EZ editatu eskuz.
 
 # Galette YunoHost-erako
 
-[![Integrazio maila](https://dash.yunohost.org/integration/galette.svg)](https://ci-apps.yunohost.org/ci/apps/galette/) ![Funtzionamendu egoera](https://ci-apps.yunohost.org/ci/badges/galette.status.svg) ![Mantentze egoera](https://ci-apps.yunohost.org/ci/badges/galette.maintain.svg)
+[![Integrazio maila](https://apps.yunohost.org/badge/integration/galette)](https://ci-apps.yunohost.org/ci/apps/galette/)
+![Funtzionamendu egoera](https://apps.yunohost.org/badge/state/galette)
+![Mantentze egoera](https://apps.yunohost.org/badge/maintained/galette)
 
 [![Instalatu Galette YunoHost-ekin](https://install-app.yunohost.org/install-with-yunohost.svg)](https://install-app.yunohost.org/?app=galette)
 
@@ -30,7 +32,7 @@ Galette is a membership management web application towards non profit organizati
 - Plugin support
 
 
-**Paketatutako bertsioa:** 1.1.3~ynh1
+**Paketatutako bertsioa:** 1.1.4~ynh1
 
 **Demoa:** <https://demo.galette.eu/login>
 
