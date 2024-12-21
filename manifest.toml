@@ -19,13 +19,12 @@ admindoc = "https://doc.galette.eu/fr/master/"
 code = "https://github.com/galette/galette"
 
 [integration]
-yunohost = ">= 11.2.30"
+yunohost = ">= 12.0.9"
 helpers_version = "2.1"
 architectures = "all"
 multi_instance = true
 
 ldap = false
-
 sso = false
 
 disk = "50M"
@@ -52,8 +51,8 @@ ram.runtime = "50M"
 
 [resources]
     [resources.sources.main]
-    url = "https://github.com/galette/galette/archive/refs/tags/1.1.4.tar.gz"
-    sha256 = "250b5368021939d6f00cb461efcb3f04ad6eb90de46fe58ce5bd2f2e7d0c6656"
+    url = "https://www.galette.eu/download/galette-1.1.4.tar.bz2"
+    sha256 = "fd76ebebe29d8b52d8a49964c7c227139a1c2fc0dddabd87338ade3ad4bd5a72"
 
     autoupdate.strategy = "latest_github_tag"
     autoupdate.needs_manual_tweaks = true

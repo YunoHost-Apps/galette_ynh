@@ -5,7 +5,9 @@
 
 # Galette для YunoHost
 
-[![Уровень интеграции](https://dash.yunohost.org/integration/galette.svg)](https://ci-apps.yunohost.org/ci/apps/galette/) ![Состояние работы](https://ci-apps.yunohost.org/ci/badges/galette.status.svg) ![Состояние сопровождения](https://ci-apps.yunohost.org/ci/badges/galette.maintain.svg)
+[![Уровень интеграции](https://apps.yunohost.org/badge/integration/galette)](https://ci-apps.yunohost.org/ci/apps/galette/)
+![Состояние работы](https://apps.yunohost.org/badge/state/galette)
+![Состояние сопровождения](https://apps.yunohost.org/badge/maintained/galette)
 
 [![Установите Galette с YunoHost](https://install-app.yunohost.org/install-with-yunohost.svg)](https://install-app.yunohost.org/?app=galette)
 

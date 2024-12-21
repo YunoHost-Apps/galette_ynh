@@ -5,7 +5,9 @@ It shall NOT be edited by hand.
 
 # Galette for YunoHost
 
-[![Integration level](https://dash.yunohost.org/integration/galette.svg)](https://ci-apps.yunohost.org/ci/apps/galette/) ![Working status](https://ci-apps.yunohost.org/ci/badges/galette.status.svg) ![Maintenance status](https://ci-apps.yunohost.org/ci/badges/galette.maintain.svg)
+[![Integration level](https://apps.yunohost.org/badge/integration/galette)](https://ci-apps.yunohost.org/ci/apps/galette/)
+![Working status](https://apps.yunohost.org/badge/state/galette)
+![Maintenance status](https://apps.yunohost.org/badge/maintained/galette)
 
 [![Install Galette with YunoHost](https://install-app.yunohost.org/install-with-yunohost.svg)](https://install-app.yunohost.org/?app=galette)
 

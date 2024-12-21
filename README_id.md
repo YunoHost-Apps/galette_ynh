@@ -5,7 +5,9 @@ Ini TIDAK boleh diedit dengan tangan.
 
 # Galette untuk YunoHost
 
-[![Tingkat integrasi](https://dash.yunohost.org/integration/galette.svg)](https://ci-apps.yunohost.org/ci/apps/galette/) ![Status kerja](https://ci-apps.yunohost.org/ci/badges/galette.status.svg) ![Status pemeliharaan](https://ci-apps.yunohost.org/ci/badges/galette.maintain.svg)
+[![Tingkat integrasi](https://apps.yunohost.org/badge/integration/galette)](https://ci-apps.yunohost.org/ci/apps/galette/)
+![Status kerja](https://apps.yunohost.org/badge/state/galette)
+![Status pemeliharaan](https://apps.yunohost.org/badge/maintained/galette)
 
 [![Pasang Galette dengan YunoHost](https://install-app.yunohost.org/install-with-yunohost.svg)](https://install-app.yunohost.org/?app=galette)
 

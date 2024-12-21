@@ -5,7 +5,9 @@ Hij mag NIET handmatig aangepast worden.
 
 # Galette voor Yunohost
 
-[![Integratieniveau](https://dash.yunohost.org/integration/galette.svg)](https://ci-apps.yunohost.org/ci/apps/galette/) ![Mate van functioneren](https://ci-apps.yunohost.org/ci/badges/galette.status.svg) ![Onderhoudsstatus](https://ci-apps.yunohost.org/ci/badges/galette.maintain.svg)
+[![Integratieniveau](https://apps.yunohost.org/badge/integration/galette)](https://ci-apps.yunohost.org/ci/apps/galette/)
+![Mate van functioneren](https://apps.yunohost.org/badge/state/galette)
+![Onderhoudsstatus](https://apps.yunohost.org/badge/maintained/galette)
 
 [![Galette met Yunohost installeren](https://install-app.yunohost.org/install-with-yunohost.svg)](https://install-app.yunohost.org/?app=galette)
 
