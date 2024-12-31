@@ -42,12 +42,12 @@ ynh_script_progression "Setuping application with CURL..."
 # Installation with curl
 ynh_script_progression "Finalizing installation..."
 ynh_local_curl "/installer.php" "install_permsok=1"
-ynh_local_curl "/installer.php"  "install_type=i"
-ynh_local_curl "/installer.php"  "install_dbtype=pgsql" "install_dbhost=localhost" "install_dbport=5432" "install_dbuser=$db_user" "install_dbpass=$db_pwd" "install_dbname=$db_name" "install_dbprefix=galette_"
-ynh_local_curl "/installer.php"  "install_dbperms_ok=1"
-ynh_local_curl "/installer.php"  "install_dbwrite_ok=1"
-ynh_local_curl "/installer.php"  "install_adminlogin=$admin" "install_adminpass=$password" "install_adminpass_verif=$password"
-ynh_local_curl "/installer.php"  "install_prefs_ok=1"
+ynh_local_curl "/installer.php" "install_type=i"
+ynh_local_curl "/installer.php" "install_dbtype=pgsql" "install_dbhost=localhost" "install_dbport=5432" "install_dbuser=$db_user" "install_dbpass=$db_pwd" "install_dbname=$db_name" "install_dbprefix=galette_"
+ynh_local_curl "/installer.php" "install_dbperms_ok=1"
+ynh_local_curl "/installer.php" "install_dbwrite_ok=1"
+ynh_local_curl "/installer.php" "install_adminlogin=$admin" "install_adminpass=$password" "install_adminpass_verif=$password"
+ynh_local_curl "/installer.php" "install_prefs_ok=1"
 
 #=================================================
 # SECURE FILES AND DIRECTORIES
