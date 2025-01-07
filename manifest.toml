@@ -7,7 +7,7 @@ name = "Galette"
 description.en = "Membership management web application for non profit organizations"
 description.fr = "Outil de gestion d'adhérents et de cotisation en ligne pour associations"
 
-version = "1.1.5~ynh1"
+version = "1.1.5.1~ynh1"
 
 maintainers = []
 
@@ -51,8 +51,8 @@ ram.runtime = "50M"
 
 [resources]
     [resources.sources.main]
-    url = "https://www.galette.eu/download/galette-1.1.5.tar.bz2"
-    sha256 = "f917f9933ae0598df94593b9e84eeb07f00afe8a110aad2ce5551a4f3215041d"
+    url = "https://www.galette.eu/download/galette-1.1.5.1.tar.bz2"
+    sha256 = "1eccc12869b8a649e193b5e56e58b1ffea753fa1ecfae45ae40e0a7adbeb7226"
 
     autoupdate.strategy = "latest_github_tag"
     autoupdate.needs_manual_tweaks = true
