@@ -32,7 +32,7 @@ Galette is a membership management web application towards non profit organizati
 - Plugin support
 
 
-**Поставляемая версия:** 1.1.5.1~ynh1
+**Поставляемая версия:** 1.1.5.2~ynh1
 
 **Демо-версия:** <https://demo.galette.eu/login>
 
