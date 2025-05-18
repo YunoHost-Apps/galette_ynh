@@ -3,7 +3,7 @@
 source ../settings/scripts/_common.sh
 source /usr/share/yunohost/helpers
 
-timezone="$(cat /etc/timezone)"
+timezone="$(timedatectl show --value --property=Timezone)"
 
 #=================================================
 # RESTORE THE APP MAIN DIR
