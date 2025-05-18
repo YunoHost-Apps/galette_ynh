@@ -7,7 +7,7 @@ source /usr/share/yunohost/helpers
 # RETRIEVE ARGUMENTS FROM THE MANIFEST
 #=================================================
 
-timezone="$(cat /etc/timezone)"
+timezone="$(timedatectl show --value --property=Timezone)"
 
 #=================================================
 # DOWNLOAD, CHECK AND UNPACK SOURCE
