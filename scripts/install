@@ -35,9 +35,9 @@ ynh_config_add_logrotate
 #=================================================
 # ADD A CONFIGURATION
 #=================================================
-ynh_script_progression "Adding $app's configuration..."
+#ynh_script_progression "Adding $app's configuration..."
 
-ynh_config_add --template="config.inc.php" --destination="$install_dir/galette/config/config.inc.php"
+#ynh_config_add --template="config.inc.php" --destination="$install_dir/galette/config/config.inc.php"
 
 #=================================================
 # SETUP APPLICATION WITH CURL
