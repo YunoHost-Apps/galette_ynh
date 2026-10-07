@@ -40,5 +40,5 @@ define("PWD_DB", "__DB_PWD__");
 define("NAME_DB", "__DB_NAME__");
 /* tables name prefix (default is galette_) */
 define("PREFIX_DB", "galette_");
-/* FIXME will disappear soon */
-define("STOCK_FILES", "tempimages");
+/* authentication token to use in your post contribution script */
+define("SCRIPT_AUTH_TOKEN", "__KEY__");
