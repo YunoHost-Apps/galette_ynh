@@ -11,9 +11,6 @@ timezone="$(timedatectl show --value --property=Timezone)"
 ynh_app_setting_set_default --key=php_upload_max_filesize --value=100M
 ynh_app_setting_set_default --key=php_post_max_size --value=100M
 
-key=$(ynh_string_random --length=45 | base64)
-ynh_app_setting_set --key=key --value=$key
-
 #=================================================
 # DOWNLOAD, CHECK AND UNPACK SOURCE
 #=================================================
@@ -33,26 +30,23 @@ ynh_config_add_nginx
 ynh_config_add_logrotate
 
 #=================================================
-# ADD A CONFIGURATION
+# SETUP APPLICATION
 #=================================================
-ynh_script_progression "Adding $app's configuration..."
+ynh_script_progression "Setting up $app..."
 
-ynh_config_add --template="config.inc.php" --destination="$install_dir/galette/config/config.inc.php"
+pushd "$install_dir"
+	ynh_hide_warnings ynh_exec_as_app php$php_version bin/console galette:install --dbtype=pgsql --no-interaction
+   ynh_hide_warnings ynh_exec_as_app php$php_version bin/console galette:install --dbhost=localhost --no-interaction
+   ynh_hide_warnings ynh_exec_as_app php$php_version bin/console galette:install --dbport=5432 --no-interaction
+   ynh_hide_warnings ynh_exec_as_app php$php_version bin/console galette:install --dbname="$db_name" --no-interaction
+   ynh_hide_warnings ynh_exec_as_app php$php_version bin/console galette:install --dbprefix="galette_" --no-interaction
+   ynh_hide_warnings ynh_exec_as_app php$php_version bin/console galette:install --dbuser="$db_user" --no-interaction
+   ynh_hide_warnings ynh_exec_as_app php$php_version bin/console galette:install --dbpass=$"$db_pwd" --no-interaction
 
-#=================================================
-# SETUP APPLICATION WITH CURL
-#=================================================
-ynh_script_progression "Setuping application with CURL..."
+   ynh_hide_warnings ynh_exec_as_app php$php_version bin/console galette:install --admin=$admin --no-interaction
+   ynh_hide_warnings ynh_exec_as_app php$php_version bin/console galette:install --password=$password --no-interaction
 
-# Installation with curl
-ynh_script_progression "Finalizing installation..."
-ynh_local_curl "/installer.php" "install_permsok=1"
-ynh_local_curl "/installer.php" "install_type=i"
-ynh_local_curl "/installer.php" "install_dbtype=pgsql" "install_dbhost=localhost" "install_dbport=5432" "install_dbuser=$db_user" "install_dbpass=$db_pwd" "install_dbname=$db_name" "install_dbprefix=galette_"
-ynh_local_curl "/installer.php" "install_dbperms_ok=1"
-ynh_local_curl "/installer.php" "install_dbwrite_ok=1"
-ynh_local_curl "/installer.php" "install_adminlogin=$admin" "install_adminpass=$password" "install_adminpass_verif=$password"
-ynh_local_curl "/installer.php" "install_prefs_ok=1"
+popd
 
 #=================================================
 # SECURE FILES AND DIRECTORIES
