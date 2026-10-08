@@ -35,7 +35,7 @@ ynh_config_add_logrotate
 ynh_script_progression "Setting up $app..."
 
 pushd "$install_dir"
-	ynh_hide_warnings ynh_exec_as_app php$php_version bin/console help galette:install --dbtype=pgsql --no-interaction
+	ynh_hide_warnings ynh_exec_as_app php$php_version bin/console galette:install --dbtype=pgsql --no-interaction
    ynh_hide_warnings ynh_exec_as_app php$php_version bin/console galette:install --dbhost=localhost --no-interaction
    ynh_hide_warnings ynh_exec_as_app php$php_version bin/console galette:install --dbport=5432 --no-interaction
    ynh_hide_warnings ynh_exec_as_app php$php_version bin/console galette:install --dbname="$db_name" --no-interaction
