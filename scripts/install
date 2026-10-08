@@ -35,17 +35,7 @@ ynh_config_add_logrotate
 ynh_script_progression "Setting up $app..."
 
 pushd "$install_dir"
-	ynh_hide_warnings ynh_exec_as_app php$php_version bin/console galette:install --dbtype=pgsql --no-interaction
-   ynh_hide_warnings ynh_exec_as_app php$php_version bin/console galette:install --dbhost=localhost --no-interaction
-   ynh_hide_warnings ynh_exec_as_app php$php_version bin/console galette:install --dbport=5432 --no-interaction
-   ynh_hide_warnings ynh_exec_as_app php$php_version bin/console galette:install --dbname="$db_name" --no-interaction
-   ynh_hide_warnings ynh_exec_as_app php$php_version bin/console galette:install --dbprefix="galette_" --no-interaction
-   ynh_hide_warnings ynh_exec_as_app php$php_version bin/console galette:install --dbuser="$db_user" --no-interaction
-   ynh_hide_warnings ynh_exec_as_app php$php_version bin/console galette:install --dbpass=$"$db_pwd" --no-interaction
-
-   ynh_hide_warnings ynh_exec_as_app php$php_version bin/console galette:install --admin=$admin --no-interaction
-   ynh_hide_warnings ynh_exec_as_app php$php_version bin/console galette:install --password=$password --no-interaction
-
+	ynh_hide_warnings ynh_exec_as_app php$php_version bin/console galette:install --dbtype=pgsql --dbhost=localhost --dbport=5432 --dbname="$db_name" --dbprefix="galette_" --dbuser="$db_user" --dbpass=$"$db_pwd" --admin=$admin --password=$password --no-interaction
 popd
 
 #=================================================
