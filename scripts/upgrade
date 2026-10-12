@@ -26,24 +26,6 @@ ynh_config_add_nginx
 ynh_config_add_logrotate
 
 
-
-if ynh_app_upgrading_from_version_before 1.3.0~ynh1
-then
-    pushd "$install_dir"
-	    ynh_hide_warnings ynh_exec_as_app php$php_version bin/console galette:install \
-                                                                        --dbtype=pgsql \
-                                                                        --dbhost=localhost \
-                                                                        --dbport=5432 \
-                                                                        --dbname="$db_name" \
-                                                                        --dbprefix="galette_" \
-                                                                        --dbuser="$db_user" \
-                                                                        --dbpass="$db_pwd" \
-                                                                        --admin="$admin" \
-                                                                        --password="$password" \
-                                                                        --ignore-config --write-config --no-interaction -vvv
-    popd
-fi
-
 #=================================================
 # SECURE FILES AND DIRECTORIES
 #=================================================
