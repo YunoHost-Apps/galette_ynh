@@ -25,6 +25,10 @@ ynh_config_add_nginx
 
 ynh_config_add_logrotate
 
+if ynh_app_upgrading_from_version_before 1.3.0~ynh1
+then
+    ynh_exec_as_app touch $install_dir/galette/data/ENABLE_INSTALL
+fi
 
 #=================================================
 # SECURE FILES AND DIRECTORIES
