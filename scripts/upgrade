@@ -38,6 +38,8 @@ then
                                                                         --dbprefix="galette_" \
                                                                         --dbuser="$db_user" \
                                                                         --dbpass="$db_pwd" \
+                                                                        --admin="$admin" \
+                                                                        --password="$password" \
                                                                         --ignore-config --write-config --no-interaction -vvv
     popd
 fi
